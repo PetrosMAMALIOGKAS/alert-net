@@ -4,13 +4,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Person {
 
-	private String firstName;
-	private String lastName;
-	private String address;
-	private String city;
-	private String zip;
-	private String phone;
-	private String email;
+	public String firstName;
+	public String lastName;
+	public String address;
+	public String city;
+	public String zip;
+	public String phone;
+	public String email;
 	
 	/*   for the post  cause not working with builder pattern  */
 	public Person(@JsonProperty("firstName") String firstName, @JsonProperty("lastName") String lastName,
@@ -25,19 +25,10 @@ public class Person {
 		this.phone = phone;
 		this.email = email;
 	}
-	/*
 	
-		public Person(@JsonProperty("firstName") String firstName, @JsonProperty("lastName") String lastName) {
-			super();
-			this.firstName = firstName;
-			this.lastName = lastName;
-			this.address = null;
-			this.city = null;
-			this.zip = null;
-			this.phone = null;
-			this.email = null;
-		}
-	*/
+	public Person() {
+		
+	}
 
 	public String getFirstName() {
 		return firstName;
@@ -69,7 +60,7 @@ public class Person {
 
 	
 
-	public static class Builder {
+	public static class PersonBuilder {
 		private String firstName;
 		private String lastName;
 		private String address;
@@ -78,38 +69,42 @@ public class Person {
 		private String phone;
 		private String email;
 		
+		public PersonBuilder() {
+			
+		}
+		
 
-		public Builder firstName(@JsonProperty("firstName") String firstName) {
+		public PersonBuilder firstName(@JsonProperty("firstName") String firstName) {
 			this.firstName = firstName;
 			return this;
 		}
 
-		public Builder lastName(@JsonProperty("lastName") String lastName) {
+		public PersonBuilder lastName(@JsonProperty("lastName") String lastName) {
 			this.lastName = lastName;
 			return this;
 		}
 
-		public Builder address(@JsonProperty("address") String address) {
+		public PersonBuilder address(@JsonProperty("address") String address) {
 			this.address = address;
 			return this;
 		}
 
-		public Builder city(@JsonProperty("city") String city) {
+		public PersonBuilder city(@JsonProperty("city") String city) {
 			this.city = city;
 			return this;
 		}
 
-		public Builder zip(@JsonProperty("zip") String zip) {
+		public PersonBuilder zip(@JsonProperty("zip") String zip) {
 			this.zip = zip;
 			return this;
 		}
 
-		public Builder phone(@JsonProperty("phone") String phone) {
+		public PersonBuilder phone(@JsonProperty("phone") String phone) {
 			this.phone = phone;
 			return this;
 		}
 
-		public Builder email(@JsonProperty("email") String email) {
+		public PersonBuilder email(@JsonProperty("email") String email) {
 			this.email = email;
 			return this;
 		}
@@ -117,20 +112,10 @@ public class Person {
 		public Person build() {
 			return new Person(this);
 		}
-		/*
-		private Person(firstName, lastName, address, city, zip, phone, email) {
-			this.firstName = firstName;
-			this.lastName = lastName;
-			this.address = address;
-			this.city = city;
-			this.zip = zip;
-			this.phone = phone;
-			this.email = email;
-		}
-		*/
+		
 	}
 
-	private Person(Builder builder) {
+	private Person(PersonBuilder builder) {
 		this.firstName = builder.firstName;
 		this.lastName = builder.lastName;
 		this.address = builder.address;

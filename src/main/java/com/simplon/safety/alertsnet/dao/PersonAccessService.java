@@ -5,18 +5,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Repository;
 
 import com.jsoniter.JsonIterator;
 import com.jsoniter.any.Any;
+import com.simplon.safety.alertsnet.AlertsnetApplication;
 import com.simplon.safety.alertsnet.model.Person;
 
 
@@ -28,58 +24,117 @@ public class PersonAccessService implements PersonDao{
 	@Autowired
 	ResourceLoader resourceLoader;
 	
-	@Override
-	public int insertPerson(Person person) {
-		System.out.println(person.toString());
-		return 0;
-	}
-
-	@Override
-	public List<Person> selectAllPeople() throws IOException {
+	public void dataInitilisation() throws IOException {
 		
 		String input = readJsonFile();
 		Any obj = JsonIterator.deserialize(input);
 		Any listPerson = obj.get("persons");
 
 		for (Any ligne : listPerson) {
-			listDePersons.add(new Person.Builder()
-					                    .firstName(ligne.get("firstName").toString())
-					                    .lastName(ligne.get("lastName").toString())
-					                    .address(ligne.get("address").toString()) 
-					                    .city(ligne.get("city").toString()) 
-					                    .zip(ligne.get("zip").toString()) 
-					                    .phone(ligne.get("phone").toString()) 
-					                    .email(ligne.get("email").toString()) 
-					                    .build()
-					                    );					
+			
+			this.listDePersons.add(new Person.PersonBuilder()
+						                    .firstName(ligne.get("firstName").toString())
+						                    .lastName(ligne.get("lastName").toString())
+						                    .address(ligne.get("address").toString()) 
+						                    .city(ligne.get("city").toString()) 
+						                    .zip(ligne.get("zip").toString()) 
+						                    .phone(ligne.get("phone").toString()) 
+						                    .email(ligne.get("email").toString()) 
+						                    .build()
+						                    );					
+		}
+	}
+	
+	
+	@Override
+	public int insertPerson(Person person) throws IOException {
+		
+		if (AlertsnetApplication.personsData.isEmpty()) {
+			
+			this.dataInitilisation();
+			this.listDePersons.add(person);
+			AlertsnetApplication.personsData = this.listDePersons;
+			
+			return 1;
+		} else {
+			
+			AlertsnetApplication.personsData.add(person);
+			
+			return 1;
 		}
 		
-		return listDePersons;
 	}
 
 	@Override
-	public int deletePerson(Person person) {
-		// TODO Auto-generated method stub
-		return 0;
+	public List<Person> selectAllPeople() throws IOException {
+		
+		if (AlertsnetApplication.personsData.isEmpty()) {
+			
+			this.dataInitilisation();
+			AlertsnetApplication.personsData = this.listDePersons;
+			
+			return this.listDePersons;
+		}
+		
+		return this.listDePersons;
 	}
 
 	@Override
-	public int updatePersoById(Person person, Person newPerson) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int deletePerson(Person person) throws IOException {
+		
+		if (AlertsnetApplication.personsData.isEmpty()) {
+			
+			this.dataInitilisation();
+			AlertsnetApplication.personsData = this.listDePersons;
+			
+		}
+		
+		AlertsnetApplication.personsData.removeIf(personInList -> (   
+				person.getFirstName().equals(personInList.getFirstName()) 
+				&& person.getLastName().equals(personInList.getLastName())));
+	
+		return 1;
+		
 	}
 
 	@Override
-	public Optional<Person> selectPersonByFirstLastName(String lastName, String firstName) {
-		// TODO Auto-generated method stub
-		return null;
+	public int updatePerson(Person oldPerson, Person newPerson) throws IOException {
+		
+		if (AlertsnetApplication.personsData.isEmpty()) {
+			
+			this.dataInitilisation();
+			AlertsnetApplication.personsData = this.listDePersons;
+			
+		}
+		
+		this.listDePersons = AlertsnetApplication.personsData;
+		
+		int indice = findIndiceDePerson(oldPerson);
+		
+		AlertsnetApplication.personsData.set(indice, newPerson);
+		
+		return 1;
+		
+	}
+
+	public int findIndiceDePerson(Person oldPerson) {
+		int counter = 0;
+		
+		for (Person person : listDePersons ) {
+			if (person.getFirstName().equals(oldPerson.getFirstName()) &&
+				person.getLastName().equals(oldPerson.getLastName()) ) {
+				
+				return counter;
+			}
+
+			counter++;			
+		}
+		
+		return -1;
+	
 	}
 	
-	public Resource loadPersons() {
-		return (Resource) resourceLoader.getResource(
-			      "classpath:src/main/resources/data.json");
-	}
-	
+
 	public String readJsonFile() throws IOException { 
 		String persons = "";
 		try {

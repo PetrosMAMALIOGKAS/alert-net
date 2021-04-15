@@ -25,9 +25,18 @@ private final PersonDao personDao;
 		return personDao.selectAllPeople();
 	}
 	
-	public int addPerson(Person person) {
+	public int addPerson(Person person) throws IOException {
 		return personDao.insertPerson(person);
 	}
+	
+	public int deletePerson(Person person) throws IOException {
+		return personDao.deletePerson(person);
+	}
+	
+	public int updatePerson(Person person, Person newPerson) throws IOException {
+		return personDao.updatePerson(person, newPerson);
+	}
+
 	
 
 }
