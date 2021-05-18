@@ -14,7 +14,7 @@ import com.simplon.safety.alertsnet.model.Person;
 @Service
 public class PersonService {
 	
-private final PersonDao personDao;
+	private final PersonDao personDao;
 	
 	@Autowired
 	public PersonService(@Qualifier("PersonAccessDao") PersonDao personDao) {

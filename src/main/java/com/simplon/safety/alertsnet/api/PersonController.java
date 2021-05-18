@@ -21,8 +21,6 @@ import com.simplon.safety.alertsnet.service.PersonService;
 @RestController
 public class PersonController {
 	
-	
-
 	private final PersonService personService;
 
 	@Autowired
@@ -35,8 +33,6 @@ public class PersonController {
 	public List<Person> getAllPeople() throws IOException {
 		return personService.getAllPeople();
 	}
-	
-
 	
 	@PostMapping
 	public void addPerson(@RequestBody Person person) throws IOException {

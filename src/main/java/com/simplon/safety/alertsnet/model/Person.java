@@ -12,23 +12,35 @@ public class Person {
 	public String phone;
 	public String email;
 	
-	/*   for the post  cause not working with builder pattern  */
-	public Person(@JsonProperty("firstName") String firstName, @JsonProperty("lastName") String lastName,
-			@JsonProperty("address") String address, @JsonProperty("city") String city, @JsonProperty("zip") String zip,
-			@JsonProperty("phone") String phone, @JsonProperty("email") String email) {
-		super();
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.address = address;
-		this.city = city;
-		this.zip = zip;
-		this.phone = phone;
-		this.email = email;
-	}
 	
 	public Person() {
-		
 	}
+	
+	private Person(PersonBuilder builder) {
+		this.firstName = builder.firstName;
+		this.lastName = builder.lastName;
+		this.address = builder.address;
+		this.city = builder.city;
+		this.zip = builder.zip;
+		this.phone = builder.phone;
+		this.email = builder.email;
+	}
+	
+	
+//	public Person(@JsonProperty("firstName") String firstName, @JsonProperty("lastName") String lastName,
+//			@JsonProperty("address") String address, @JsonProperty("city") String city, @JsonProperty("zip") String zip,
+//			@JsonProperty("phone") String phone, @JsonProperty("email") String email) {
+//		super();
+//		this.firstName = firstName;
+//		this.lastName = lastName;
+//		this.address = address;
+//		this.city = city;
+//		this.zip = zip;
+//		this.phone = phone;
+//		this.email = email;
+//	}
+	
+
 
 	public String getFirstName() {
 		return firstName;
@@ -56,6 +68,12 @@ public class Person {
 
 	public String getEmail() {
 		return email;
+	}
+	
+	@Override
+	public String toString() {
+		return "Person [firstName=" + firstName + ", lastName=" + lastName + ", address=" + address + ", city=" + city
+				+ ", zip=" + zip + ", phone=" + phone + ", email=" + email + "]";
 	}
 
 	
@@ -115,22 +133,5 @@ public class Person {
 		
 	}
 
-	private Person(PersonBuilder builder) {
-		this.firstName = builder.firstName;
-		this.lastName = builder.lastName;
-		this.address = builder.address;
-		this.city = builder.city;
-		this.zip = builder.zip;
-		this.phone = builder.phone;
-		this.email = builder.email;
-	}
-	
-
-	@Override
-	public String toString() {
-		return "Person [firstName=" + firstName + ", lastName=" + lastName + ", address=" + address + ", city=" + city
-				+ ", zip=" + zip + ", phone=" + phone + ", email=" + email + "]";
-	}
-	
 	
 }

@@ -147,5 +147,9 @@ public class PersonAccessService implements PersonDao{
 	   
 	    return persons;
 	}
+	
+	public void ttt() {
+		throw new ArithmeticException();
+	}
 
 }

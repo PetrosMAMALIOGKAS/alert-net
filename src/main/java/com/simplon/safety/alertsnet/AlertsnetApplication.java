@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import com.simplon.safety.alertsnet.model.Firestation;
 import com.simplon.safety.alertsnet.model.Person;
 
 @SpringBootApplication
@@ -16,5 +17,6 @@ public class AlertsnetApplication {
 	}
 	
 	public static List<Person> personsData = new ArrayList<Person>();
+	public static List<Firestation> firestationsData = new ArrayList<Firestation>();
 
 }
