@@ -45,6 +45,20 @@ public class PersonAccessService implements PersonDao{
 		}
 	}
 	
+	@Override
+	public List<Person> selectAllPeople() throws IOException {
+		
+		if (AlertsnetApplication.personsData.isEmpty()) {
+			
+			this.dataInitilisation();
+			AlertsnetApplication.personsData = this.listDePersons;
+
+		}
+		
+		return this.listDePersons;
+	}
+
+	
 	
 	@Override
 	public int insertPerson(Person person) throws IOException {
@@ -65,20 +79,7 @@ public class PersonAccessService implements PersonDao{
 		
 	}
 
-	@Override
-	public List<Person> selectAllPeople() throws IOException {
-		
-		if (AlertsnetApplication.personsData.isEmpty()) {
-			
-			this.dataInitilisation();
-			AlertsnetApplication.personsData = this.listDePersons;
-			
-			return this.listDePersons;
-		}
-		
-		return this.listDePersons;
-	}
-
+	
 	@Override
 	public int deletePerson(Person person) throws IOException {
 		

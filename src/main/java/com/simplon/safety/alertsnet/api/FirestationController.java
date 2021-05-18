@@ -25,6 +25,7 @@ public class FirestationController {
 	
 	@Autowired
 	public FirestationController(FirestationService firestationService) {
+		
 		this.firestationService = firestationService;
 	}
 	
@@ -42,18 +43,13 @@ public class FirestationController {
 	
 	@DeleteMapping
 	public void deleteFirestation(@RequestBody Firestation firestation) throws IOException {
-		System.out.println("APIiiiiiiiiiiiii  *****");
-		System.out.println(firestation.toString());
-		
+
 		firestationService.deleteFirestation(firestation);
 	}
 	
 	@PutMapping
 	public void updatePerson(@RequestParam("address") String address,
 			                 @RequestBody Firestation newFirestationCaserne   )  throws IOException {
-		
-		System.out.println("Service *****");
-		System.out.println(address);
 		
 		Firestation firestationToChange = new Firestation.FirestationBuilder()
 				                     .address(address)

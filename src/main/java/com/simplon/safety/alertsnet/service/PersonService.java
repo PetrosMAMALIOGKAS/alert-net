@@ -37,6 +37,4 @@ public class PersonService {
 		return personDao.updatePerson(person, newPerson);
 	}
 
-	
-
 }

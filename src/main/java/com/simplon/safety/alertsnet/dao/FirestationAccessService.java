@@ -37,6 +37,19 @@ public class FirestationAccessService implements FirestationDao {
 		}
 	}
 	
+	@Override
+	public List<Firestation> listAllfirestations() throws IOException {
+		
+		if (AlertsnetApplication.firestationsData.isEmpty()) {
+			
+			this.dataInitilisation();
+			AlertsnetApplication.firestationsData = this.firestations;
+
+		}
+		
+		return this.firestations;
+	}
+	
 
 	@Override
 	public int insertFirestation(Firestation firestation) throws IOException {
@@ -56,19 +69,6 @@ public class FirestationAccessService implements FirestationDao {
 		}
 	}
 
-	@Override
-	public List<Firestation> listAllfirestations() throws IOException {
-		
-		if (AlertsnetApplication.firestationsData.isEmpty()) {
-			
-			this.dataInitilisation();
-			AlertsnetApplication.firestationsData = this.firestations;
-			
-			return this.firestations;
-		}
-		
-		return this.firestations;
-	}
 
 	@Override
 	public int deleteFirestation(Firestation firestation) throws IOException {
