@@ -95,7 +95,6 @@ public class PersonAccessService implements PersonDao{
 				&& person.getLastName().equals(personInList.getLastName())));
 	
 		return 1;
-		
 	}
 
 	@Override
@@ -132,7 +131,6 @@ public class PersonAccessService implements PersonDao{
 		}
 		
 		return -1;
-	
 	}
 	
 

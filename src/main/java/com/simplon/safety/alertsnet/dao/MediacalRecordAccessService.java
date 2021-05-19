@@ -12,6 +12,7 @@ import com.jsoniter.JsonIterator;
 import com.jsoniter.any.Any;
 import com.simplon.safety.alertsnet.AlertsnetApplication;
 import com.simplon.safety.alertsnet.model.MedicalRecord;
+import com.simplon.safety.alertsnet.model.Person;
 
 
 @Repository("MediacalRecordAccessDao")
@@ -26,11 +27,9 @@ public class MediacalRecordAccessService implements MedicalRecordDao{
 		Any obj = JsonIterator.deserialize(input);
 		Any data = obj.get("medicalrecords");
 		
-		List<String> listMedications = new ArrayList<String>();
-		List<String> listAllergies = new ArrayList<String>();
-		
-		//int counter = 0;
 		for (Any ligne : data) {
+			List<String> listMedications = new ArrayList<String>();
+			List<String> listAllergies = new ArrayList<String>();
 			
 			if (ligne.get("medications").size() > 0) {
 
@@ -38,7 +37,6 @@ public class MediacalRecordAccessService implements MedicalRecordDao{
 					
 					listMedications.add(medication.toString());
 				}
-				//System.out.println(listMedications.size() + "%%%%%%%%%%%%");
 			}
 			
 			if (ligne.get("allergies").size() > 0) {
@@ -46,80 +44,112 @@ public class MediacalRecordAccessService implements MedicalRecordDao{
 				for (Any allergie : ligne.get("allergies")) {
 					listAllergies.add(allergie.toString());
 				}
-				
 			}
-			//System.out.println(listMedications.get(1) + "######");
 
-			this.listMedicalRecords.add(new MedicalRecord.MedicalRecordBuilder()
-						                    .firstName(ligne.get("firstName").toString())
-						                    .lastName(ligne.get("lastName").toString())
-						                    .birthdate(ligne.get("birthdate").toString())
-						                    .medications(listMedications) 
-						                    .allergies(listAllergies) 
-						                    .build()
-						                    );
-			
-			//System.out.println(listMedicalRecords.get(0).toString());
-			//System.out.println(listMedicalRecords.get(counter).medications.get(1) + "****");
-			//System.out.println(listMedicalRecords.size() + "   " + listMedications.size()  + " ~~~~");
-			listMedications.clear();
-			listAllergies.clear();
-		
-		}
+			this.listMedicalRecords.add(
+					new MedicalRecord.MedicalRecordBuilder()
+				                     .firstName(ligne.get("firstName").toString())
+				                     .lastName(ligne.get("lastName").toString())
+				                     .birthdate(ligne.get("birthdate").toString())
+				                     .medications(listMedications) 
+				                     .allergies(listAllergies) 
+				                     .build()
+				                     );
+		} 
 		
 	}
 	
 	@Override
 	public List<MedicalRecord> listAllMedicalRecords() throws IOException {
 		
-//		if (AlertsnetApplication.medicalRecordsData.isEmpty()) {
-//			
-//			this.dataInitilisation();
-//			AlertsnetApplication.medicalRecordsData = this.listMedicalRecords;
-//			
-//		}
+		if (AlertsnetApplication.medicalRecordsData.isEmpty()) {
+			
+			this.dataInitilisation();
+			AlertsnetApplication.medicalRecordsData = this.listMedicalRecords;
+			
+		}
 
-		this.dataInitilisation();
-		
-		//System.out.println(listMedicalRecords.get(1).getMedications().get(1) + " ¨¨¨¨¨¨  " );
-		System.out.println(listMedicalRecords.get(1).toString());
 		return listMedicalRecords;
-		
 	}
 	
 	
 	
 	@Override
 	public int insertMediacalRecord(MedicalRecord medicalRecord) throws IOException {
-//		if (AlertsnetApplication.medicalRecordsData.isEmpty()) {
-//			
-//			this.dataInitilisation();
-//			this.listMediacalRecords.add(person);
-//			AlertsnetApplication.personsData = this.listDePersons;
-//			
-//			return 1;
-//		} else {
-//			
-//			AlertsnetApplication.personsData.add(person);
-//			
-//			return 1;
-//		}
-		return 0;
+		if (AlertsnetApplication.medicalRecordsData.isEmpty()) {
+			
+			this.dataInitilisation();
+			this.listMedicalRecords.add(medicalRecord);
+			AlertsnetApplication.medicalRecordsData = this.listMedicalRecords;
+			
+			return 1;
+		} else {
+			
+			AlertsnetApplication.medicalRecordsData.add(medicalRecord);
+			
+			return 1;
+		}
 	}
 
 	
 
 	@Override
 	public int deleteMedicalRecord(MedicalRecord medicalRecord) throws IOException {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		if (AlertsnetApplication.medicalRecordsData.isEmpty()) {
+			
+			this.dataInitilisation();
+			AlertsnetApplication.medicalRecordsData = this.listMedicalRecords;
+			
+		}
+		
+		AlertsnetApplication.medicalRecordsData.removeIf(medicalInList -> (   
+				medicalRecord.getFirstName().equals(medicalInList.getFirstName()) 
+				&& medicalRecord.getLastName().equals(medicalInList.getLastName())));
+	
+		return 1;
 	}
 
+	
+	
+	
 	@Override
-	public int updateMedicalRecord(MedicalRecord medicalRecord, MedicalRecord newMedicalRecord) throws IOException {
-		// TODO Auto-generated method stub
-		return 0;
+	public int updateMedicalRecord(MedicalRecord oldMedicalRecord, MedicalRecord newMedicalRecord) throws IOException {
+			
+			if (AlertsnetApplication.medicalRecordsData.isEmpty()) {
+				
+				this.dataInitilisation();
+				AlertsnetApplication.medicalRecordsData = this.listMedicalRecords;
+				
+			}
+			
+			this.listMedicalRecords = AlertsnetApplication.medicalRecordsData;
+			
+			int indice = findIndiceDeMedicalRecord(oldMedicalRecord);
+			
+			AlertsnetApplication.medicalRecordsData.set(indice, newMedicalRecord);
+			
+			return 1;	
+		
 	}
+	
+	public int findIndiceDeMedicalRecord(MedicalRecord oldMedicalRecord) {
+		int counter = 0;
+		
+		for (MedicalRecord medicalRecord : listMedicalRecords ) {
+			if (medicalRecord.getFirstName().equals(oldMedicalRecord.getFirstName()) &&
+				medicalRecord.getLastName().equals(oldMedicalRecord.getLastName()) ) {
+				
+				return counter;
+			}
+
+			counter++;			
+		}
+		
+		return -1;
+	}
+	
+	
 	
 	
 	public String readJsonFile() throws IOException { 
