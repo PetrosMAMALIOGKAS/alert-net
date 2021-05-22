@@ -18,23 +18,27 @@ public class MedicalRecordService {
 	
 	@Autowired
 	public MedicalRecordService(@Qualifier("MediacalRecordAccessDao") MedicalRecordDao medicalRecordDao) {
+		
 		this.medicalRecordDao = medicalRecordDao;
 	}
 	
 	public List<MedicalRecord> listAllMedicalRecords() throws IOException {
+		
 		return medicalRecordDao.listAllMedicalRecords();
 	}
 	
 	public int addMediacalRecord(MedicalRecord medicalRecord) throws IOException {
+		
 		return medicalRecordDao.insertMediacalRecord(medicalRecord);
 	}
 	
 	public int deletePerson(MedicalRecord medicalRecord) throws IOException {
+		
 		return medicalRecordDao.deleteMedicalRecord(medicalRecord);
 	}
 	
 	public int updatePerson(MedicalRecord oldMedicalRecord, MedicalRecord newMedicalRecord) throws IOException {
+		
 		return medicalRecordDao.updateMedicalRecord(oldMedicalRecord, newMedicalRecord);
 	}
-
 }

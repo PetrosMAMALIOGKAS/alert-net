@@ -12,7 +12,6 @@ import com.jsoniter.JsonIterator;
 import com.jsoniter.any.Any;
 import com.simplon.safety.alertsnet.AlertsnetApplication;
 import com.simplon.safety.alertsnet.model.MedicalRecord;
-import com.simplon.safety.alertsnet.model.Person;
 
 
 @Repository("MediacalRecordAccessDao")
@@ -56,7 +55,6 @@ public class MediacalRecordAccessService implements MedicalRecordDao{
 				                     .build()
 				                     );
 		} 
-		
 	}
 	
 	@Override
@@ -76,6 +74,7 @@ public class MediacalRecordAccessService implements MedicalRecordDao{
 	
 	@Override
 	public int insertMediacalRecord(MedicalRecord medicalRecord) throws IOException {
+		
 		if (AlertsnetApplication.medicalRecordsData.isEmpty()) {
 			
 			this.dataInitilisation();
@@ -110,9 +109,6 @@ public class MediacalRecordAccessService implements MedicalRecordDao{
 		return 1;
 	}
 
-	
-	
-	
 	@Override
 	public int updateMedicalRecord(MedicalRecord oldMedicalRecord, MedicalRecord newMedicalRecord) throws IOException {
 			
@@ -148,9 +144,6 @@ public class MediacalRecordAccessService implements MedicalRecordDao{
 		
 		return -1;
 	}
-	
-	
-	
 	
 	public String readJsonFile() throws IOException { 
 		String data = "";

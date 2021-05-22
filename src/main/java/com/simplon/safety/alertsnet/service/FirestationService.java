@@ -18,22 +18,27 @@ public class FirestationService {
 	
 	@Autowired
 	public FirestationService(@Qualifier("FirestationAccessDao") FirestationDao firestationDao) {
+		
 		this.firestationDao = firestationDao;
 	}
 	
 	public int insertFirestation(Firestation firestation) throws IOException {
+		
 		return firestationDao.insertFirestation(firestation);
 	}
 
 	public List<Firestation> listAllfirestations() throws IOException {
+		
 		return firestationDao.listAllfirestations();
 	}
 
 	public int deleteFirestation(Firestation firestation) throws IOException {
+		
 		return firestationDao.deleteFirestation(firestation);
 	}
 
 	public int updateFirestation(Firestation firestationToChange, Firestation newFirestationCaserne) throws IOException {
+		
 		return firestationDao.updateFirestation(firestationToChange, newFirestationCaserne);
 	}
 }

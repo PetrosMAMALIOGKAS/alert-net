@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simplon.safety.alertsnet.model.MedicalRecord;
-import com.simplon.safety.alertsnet.model.Person;
 import com.simplon.safety.alertsnet.service.MedicalRecordService;
 
 

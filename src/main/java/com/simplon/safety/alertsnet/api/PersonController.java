@@ -25,12 +25,14 @@ public class PersonController {
 
 	@Autowired
 	public PersonController(PersonService personService) {
+		
 		this.personService = personService;
 	}
 	
 	
 	@GetMapping
 	public List<Person> getAllPeople() throws IOException {
+		
 		return personService.getAllPeople();
 	}
 	
@@ -58,7 +60,5 @@ public class PersonController {
 		
 		personService.updatePerson(oldPerson, newPerson);
 	}
-
-	
 
 }

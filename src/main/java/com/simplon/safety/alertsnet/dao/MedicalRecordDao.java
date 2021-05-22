@@ -17,6 +17,4 @@ public interface MedicalRecordDao {
 		
 		int updateMedicalRecord(MedicalRecord medicalRecord, MedicalRecord newMedicalRecord) throws IOException;
 		
-
-
 }

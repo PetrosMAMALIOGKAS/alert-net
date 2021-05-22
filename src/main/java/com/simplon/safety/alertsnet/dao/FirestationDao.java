@@ -17,5 +17,4 @@ public interface FirestationDao {
 	
 	int updateFirestation(Firestation oldFirestation, Firestation newFirestation) throws IOException;
 	
-
 }

@@ -57,6 +57,5 @@ public class FirestationController {
 		
 		firestationService.updateFirestation(firestationToChange, newFirestationCaserne);
 	}
-	
 
 }

@@ -16,7 +16,6 @@ public interface PersonDao {
 	
 	int updatePerson(Person person, Person newPerson) throws IOException;
 	
-
 }
 
 

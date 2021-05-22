@@ -19,7 +19,6 @@ public class FirestationAccessService implements FirestationDao {
 	
 	public List<Firestation> firestations = new ArrayList<Firestation>();
 	
-	
 	public void dataInitilisation() throws IOException {
 		
 		String input = readJsonFile();
@@ -69,7 +68,6 @@ public class FirestationAccessService implements FirestationDao {
 		}
 	}
 
-
 	@Override
 	public int deleteFirestation(Firestation firestation) throws IOException {
 	
@@ -114,11 +112,8 @@ public class FirestationAccessService implements FirestationDao {
 			
 			System.out.println("address : " + oldFirestation.getAddress() + " not found");
 			return -1;
-			
 		}
-		
 	}
-	
 	
 	public String readJsonFile() throws IOException { 
 		String persons = "";
@@ -133,7 +128,6 @@ public class FirestationAccessService implements FirestationDao {
 	    return persons;
 	}
 	
-	
 	public int findIndiceDeFirestation(Firestation firestationToChange) {
 		int counter = 0;
 		
@@ -147,7 +141,6 @@ public class FirestationAccessService implements FirestationDao {
 		}
 		
 		return -1;
-	
 	}
 	
 }

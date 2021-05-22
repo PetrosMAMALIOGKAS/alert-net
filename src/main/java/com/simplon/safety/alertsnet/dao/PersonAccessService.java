@@ -58,8 +58,6 @@ public class PersonAccessService implements PersonDao{
 		return this.listDePersons;
 	}
 
-	
-	
 	@Override
 	public int insertPerson(Person person) throws IOException {
 		
@@ -76,10 +74,8 @@ public class PersonAccessService implements PersonDao{
 			
 			return 1;
 		}
-		
 	}
 
-	
 	@Override
 	public int deletePerson(Person person) throws IOException {
 		
@@ -114,7 +110,6 @@ public class PersonAccessService implements PersonDao{
 		AlertsnetApplication.personsData.set(indice, newPerson);
 		
 		return 1;
-		
 	}
 
 	public int findIndiceDePerson(Person oldPerson) {
@@ -133,7 +128,6 @@ public class PersonAccessService implements PersonDao{
 		return -1;
 	}
 	
-
 	public String readJsonFile() throws IOException { 
 		String persons = "";
 		try {
@@ -147,8 +141,4 @@ public class PersonAccessService implements PersonDao{
 	    return persons;
 	}
 	
-	public void ttt() {
-		throw new ArithmeticException();
-	}
-
 }
