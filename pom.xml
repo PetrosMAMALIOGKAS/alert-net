@@ -14,13 +14,12 @@
 	<name>alertsnet</name>
 	<description>Project that sends safety alerts</description>
 	
-
-	
 	<properties>
 	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	    <maven.compiler.source>1.8</maven.compiler.source>
 	    <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
 	    <junit.jupiter.version>5.7.1</junit.jupiter.version>
+		<java.version>1.8</java.version>
   	</properties>
   	
 	<dependencies>
@@ -28,11 +27,22 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 		
 		<dependency>
@@ -54,6 +64,10 @@
 	        <scope>test</scope>
 	    </dependency>
 	    
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>

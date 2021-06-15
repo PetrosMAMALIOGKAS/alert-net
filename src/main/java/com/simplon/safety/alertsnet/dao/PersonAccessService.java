@@ -5,14 +5,16 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ResourceLoader;
+//import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Repository;
 
 import com.jsoniter.JsonIterator;
 import com.jsoniter.any.Any;
 import com.simplon.safety.alertsnet.AlertsnetApplication;
+import com.simplon.safety.alertsnet.exceptions.ResourceNotFoundException;
 import com.simplon.safety.alertsnet.model.Person;
 
 
@@ -21,11 +23,14 @@ public class PersonAccessService implements PersonDao{
 	
 	List<Person> listDePersons = new ArrayList<Person>();
 	
-	@Autowired
-	ResourceLoader resourceLoader;
+	@Autowired                 
+    private PersonRepository personRepository;
 	
-	public void dataInitilisation() throws IOException {
-		
+//	@Autowired                 
+//    private AddressRepository addressRepository;
+	
+	public void dataInitilisation() throws IOException
+	{
 		String input = readJsonFile();
 		Any obj = JsonIterator.deserialize(input);
 		Any listPerson = obj.get("persons");
@@ -35,7 +40,12 @@ public class PersonAccessService implements PersonDao{
 			this.listDePersons.add(new Person.PersonBuilder()
 						                    .firstName(ligne.get("firstName").toString())
 						                    .lastName(ligne.get("lastName").toString())
-						                    .address(ligne.get("address").toString()) 
+						                    .address(ligne.get("address").toString())
+//						                    new Address.AddressBuilder()
+//						                    		            .rue_name_number(ligne.get("address").toString()) 
+//											                    .city(ligne.get("city").toString()) 
+//											                    .zip(ligne.get("zip").toString()) 
+//											                    .build())
 						                    .city(ligne.get("city").toString()) 
 						                    .zip(ligne.get("zip").toString()) 
 						                    .phone(ligne.get("phone").toString()) 
@@ -46,39 +56,95 @@ public class PersonAccessService implements PersonDao{
 	}
 	
 	@Override
-	public List<Person> selectAllPeople() throws IOException {
-		
-		if (AlertsnetApplication.personsData.isEmpty()) {
+	public List<Person> selectAllPeople() throws IOException 
+	{
+		return (List<Person>) personRepository.findAll();
+	}
+	
+	@Override
+	public List<Person> initPersonTable() throws IOException 
+	{
+		this.dataInitilisation();
+		AlertsnetApplication.personsData = this.listDePersons;
 			
-			this.dataInitilisation();
-			AlertsnetApplication.personsData = this.listDePersons;
-
-		}
-		
 		return this.listDePersons;
+	}
+	
+	@Override
+	public Optional<Person> getPersonById(Long id) 
+	{
+		return personRepository.findById(id);
 	}
 
 	@Override
-	public int insertPerson(Person person) throws IOException {
-		
-		if (AlertsnetApplication.personsData.isEmpty()) {
+	public int insertPerson(Person person) throws IOException 
+	{
+		  Person p = new Person();
+		  p.setFirstName(person.getFirstName());
+		  p.setLastName(person.getLastName());
+		  p.setAddress(person.getAddress());
+		  p.setPhone(person.getPhone());
+		  p.setEmail(person.getEmail());
+		  
+		  Person insertResult = personRepository.save(p);
+		  if  (insertResult.equals(p)) {
+			  return 1;
+		  }
+		  
+		  return -1;
+	}
+	
+	@Override
+	public int deletePersonById(Long  id) 
+	{
+		personRepository.deleteById(id);
+		return 1;
+	}
+	
+	@Override
+	public int updatePersonById(Long id, Person newPerson) 
+	{
+		Optional<Person> personDb = this.personRepository.findById(id);
+
+		if (personDb.isPresent()) {
 			
-			this.dataInitilisation();
-			this.listDePersons.add(person);
-			AlertsnetApplication.personsData = this.listDePersons;
+			Person personUpdate = personDb.get();
+		
+			if ( ! personUpdate.getAddress().equals(newPerson.getAddress())) {
+				
+				personRepository.updatePersonAddress(newPerson.getAddress(), id);
+			}
+			
+			if ( ! personUpdate.getZip().equals(newPerson.getZip())) {
+				
+				personRepository.updatePersonZip(newPerson.getZip(), id);
+			}
+			
+			if ( ! personUpdate.getPhone().equals(newPerson.getPhone())) {
+				
+				personRepository.updatePersonPhone(newPerson.getPhone(), id);
+			}
+				
+			if ( ! personUpdate.getEmail().equals(newPerson.getEmail())) {
+				
+				personRepository.updatePersonEmail(newPerson.getEmail(), id);
+			}
+			
+			if ( ! personUpdate.getCity().equals(newPerson.getCity())) {
+				
+				personRepository.updatePersonCity(newPerson.getCity(), id);
+			}
 			
 			return 1;
 		} else {
 			
-			AlertsnetApplication.personsData.add(person);
-			
-			return 1;
+			throw new ResourceNotFoundException("Person not found with id : " + id);
 		}
 	}
 
 	@Override
-	public int deletePerson(Person person) throws IOException {
-		
+	public int deletePerson(Person person) throws IOException 
+	{
 		if (AlertsnetApplication.personsData.isEmpty()) {
 			
 			this.dataInitilisation();
@@ -93,42 +159,44 @@ public class PersonAccessService implements PersonDao{
 		return 1;
 	}
 
-	@Override
-	public int updatePerson(Person oldPerson, Person newPerson) throws IOException {
-		
-		if (AlertsnetApplication.personsData.isEmpty()) {
-			
-			this.dataInitilisation();
-			AlertsnetApplication.personsData = this.listDePersons;
-			
-		}
-		
-		this.listDePersons = AlertsnetApplication.personsData;
-		
-		int indice = findIndiceDePerson(oldPerson);
-		
-		AlertsnetApplication.personsData.set(indice, newPerson);
-		
-		return 1;
-	}
+//	@Override
+//	public int updatePerson(Person oldPerson, Person newPerson) throws IOException
+//	{
+//		if (AlertsnetApplication.personsData.isEmpty()) {
+//			
+//			this.dataInitilisation();
+//			AlertsnetApplication.personsData = this.listDePersons;
+//			
+//		}
+//		
+//		this.listDePersons = AlertsnetApplication.personsData;
+//		
+//		int indice = findIndiceDePerson(oldPerson);
+//		
+//		AlertsnetApplication.personsData.set(indice, newPerson);
+//		
+//		return 1;
+//	}
 
-	public int findIndiceDePerson(Person oldPerson) {
-		int counter = 0;
-		
-		for (Person person : listDePersons ) {
-			if (person.getFirstName().equals(oldPerson.getFirstName()) &&
-				person.getLastName().equals(oldPerson.getLastName()) ) {
-				
-				return counter;
-			}
-
-			counter++;			
-		}
-		
-		return -1;
-	}
+//	public int findIndiceDePerson(Person oldPerson)
+//	{
+//		int counter = 0;
+//		
+//		for (Person person : listDePersons ) {
+//			if (person.getFirstName().equals(oldPerson.getFirstName()) &&
+//				person.getLastName().equals(oldPerson.getLastName()) ) {
+//				
+//				return counter;
+//			}
+//
+//			counter++;			
+//		}
+//		
+//		return -1;
+//	}
 	
-	public String readJsonFile() throws IOException { 
+	public String readJsonFile() throws IOException
+	{ 
 		String persons = "";
 		try {
 		    persons = new String(
@@ -140,5 +208,6 @@ public class PersonAccessService implements PersonDao{
 	   
 	    return persons;
 	}
+
 	
 }
