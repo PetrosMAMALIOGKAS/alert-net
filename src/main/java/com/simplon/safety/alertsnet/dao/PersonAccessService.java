@@ -26,9 +26,6 @@ public class PersonAccessService implements PersonDao{
 	@Autowired                 
     private PersonRepository personRepository;
 	
-//	@Autowired                 
-//    private AddressRepository addressRepository;
-	
 	public void dataInitilisation() throws IOException
 	{
 		String input = readJsonFile();
@@ -62,12 +59,13 @@ public class PersonAccessService implements PersonDao{
 	}
 	
 	@Override
-	public List<Person> initPersonTable() throws IOException 
+	public int initPersonTable() throws IOException 
 	{
 		this.dataInitilisation();
-		AlertsnetApplication.personsData = this.listDePersons;
+		
+		personRepository.saveAll(listDePersons);
 			
-		return this.listDePersons;
+		return 1;
 	}
 	
 	@Override
@@ -158,42 +156,6 @@ public class PersonAccessService implements PersonDao{
 	
 		return 1;
 	}
-
-//	@Override
-//	public int updatePerson(Person oldPerson, Person newPerson) throws IOException
-//	{
-//		if (AlertsnetApplication.personsData.isEmpty()) {
-//			
-//			this.dataInitilisation();
-//			AlertsnetApplication.personsData = this.listDePersons;
-//			
-//		}
-//		
-//		this.listDePersons = AlertsnetApplication.personsData;
-//		
-//		int indice = findIndiceDePerson(oldPerson);
-//		
-//		AlertsnetApplication.personsData.set(indice, newPerson);
-//		
-//		return 1;
-//	}
-
-//	public int findIndiceDePerson(Person oldPerson)
-//	{
-//		int counter = 0;
-//		
-//		for (Person person : listDePersons ) {
-//			if (person.getFirstName().equals(oldPerson.getFirstName()) &&
-//				person.getLastName().equals(oldPerson.getLastName()) ) {
-//				
-//				return counter;
-//			}
-//
-//			counter++;			
-//		}
-//		
-//		return -1;
-//	}
 	
 	public String readJsonFile() throws IOException
 	{ 

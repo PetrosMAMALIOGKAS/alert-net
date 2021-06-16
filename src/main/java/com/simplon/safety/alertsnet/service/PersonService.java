@@ -23,7 +23,7 @@ public class PersonService {
 		this.personDao = personDao;
 	}
 	
-	public List<Person> initPersonTable() throws IOException 
+	public int initPersonTable() throws IOException 
 	{
 		return personDao.initPersonTable();
 	}
@@ -52,7 +52,6 @@ public class PersonService {
 	{
 		return personDao.deletePersonById(id);
 	}
-	
 	
 	public int updatePersonById(Long id, Person newPerson)
 	{

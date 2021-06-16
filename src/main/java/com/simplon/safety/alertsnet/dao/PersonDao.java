@@ -9,7 +9,7 @@ import com.simplon.safety.alertsnet.model.Person;
 
 public interface PersonDao {
 	
-	List<Person> initPersonTable() throws IOException; 
+	int initPersonTable() throws IOException; 
 	
     int insertPerson(Person person) throws IOException;
 	
