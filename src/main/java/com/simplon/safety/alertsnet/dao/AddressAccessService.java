@@ -27,24 +27,40 @@ public class AddressAccessService implements AddressDao{
 	{
 		this.dataInitilisation();
 		
-
-//		for (Address address : this.listDesAddress) {
-//			long idAddress = addressRepository.getAddressId_IfExists(address.getCity(), address.getRue_name_number(), address.getZip());
-//			System.out.println("idAddress = " + idAddress + " counter= " + counter);
-//		}
-//		
+		this.insertAddress(this.listDesAddress.get(0));
 		
-		addressRepository.saveAll(this.listDesAddress);
+		for (Address address : this.listDesAddress) {
+			
+			try {
+				Address dbResult = addressRepository.getAddressId_IfExists(address.getCity(), address.getRue_name_number(), address.getZip());
+				long idAddress = dbResult.getId_address();
+			} catch (Exception e) {
 		
+				this.insertAddress(address);
+			}
+		}	
 		return 1;
 	}
 
 	@Override
-	public int insertAddress(Address address) throws IOException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	public long insertAddress(Address address) throws IOException 
+	{
+	  
+	   long idAddress;		
+	   try {
+			Address dbResult = addressRepository.getAddressId_IfExists(address.getCity(), address.getRue_name_number(), address.getZip());
+			idAddress = dbResult.getId_address();
+			return idAddress;
+		} catch (Exception e) {
+	
+			addressRepository.save(address);
+			Address dbResult = addressRepository.getAddressId_IfExists(address.getCity(), address.getRue_name_number(), address.getZip());
+			idAddress = dbResult.getId_address();
+			return idAddress;
+		}   
 
+	}
+	
 	@Override
 	public List<Address> listAllAddress() throws IOException {
 		// TODO Auto-generated method stub
@@ -52,9 +68,9 @@ public class AddressAccessService implements AddressDao{
 	}
 
 	@Override
-	public Optional<Address> getAddressById(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+	public Optional<Address> getAddressById(Long id) 
+	{
+		return addressRepository.findById(id);
 	}
 
 	@Override

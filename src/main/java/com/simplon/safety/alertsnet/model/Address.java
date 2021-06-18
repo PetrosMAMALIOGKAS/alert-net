@@ -1,9 +1,16 @@
 package com.simplon.safety.alertsnet.model;
 
+
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Address {
@@ -12,11 +19,24 @@ public class Address {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	public Long id_address;
 	
+	@OneToMany(
+			mappedBy = "person_address",
+			cascade = CascadeType.ALL,
+			orphanRemoval = true )
+	private Collection<Person> personsOnThisAddress = new ArrayList<>();
+	
 	public String rue_name_number;
 	public String city;
 	public String zip;
 	
 	public Address() {}
+	
+	public Address(AddressBuilder builder) {
+		this.id_address = builder.id_address;
+		this.rue_name_number = builder.rue_name_number;
+		this.city = builder.city;
+		this.zip = builder.zip;
+	}
 	
 	public Long getId_address() {
 		return id_address;
@@ -50,13 +70,15 @@ public class Address {
 		this.zip = zip;
 	}
 	
-//	public Set<Person> getPersons_liveHere() {
-//		return persons_liveHere;
-//	}
-//
-//	public void setPersons_liveHere(Set<Person> persons_liveHere) {
-//		this.persons_liveHere = persons_liveHere;
-//	}
+
+
+	public Collection<Person> getPersonsOnThisAddress() {
+		return personsOnThisAddress;
+	}
+
+	public void setPersonsOnThisAddress(Collection<Person> personsOnThisAddress) {
+		this.personsOnThisAddress = personsOnThisAddress;
+	}
 
 	@Override
 	public String toString() {
@@ -95,10 +117,5 @@ public class Address {
 		}
 	}
 
-	private Address(AddressBuilder builder) {
-		this.id_address = builder.id_address;
-		this.rue_name_number = builder.rue_name_number;
-		this.city = builder.city;
-		this.zip = builder.zip;
-	}
+
 }

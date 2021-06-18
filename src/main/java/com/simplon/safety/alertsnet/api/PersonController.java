@@ -43,9 +43,11 @@ public class PersonController {
 	  int resultAddress;
 
 	  resultPerson = personService.initPersonTable();
+	 
+	  
 	  resultAddress = addressService.initAddressTable();
 		
-	  //personRepository.saveAll(personTableContent);
+
 	  if (resultPerson == 1 && resultAddress == 1) {
 		  return "table Person et address Initialised";
 	  }

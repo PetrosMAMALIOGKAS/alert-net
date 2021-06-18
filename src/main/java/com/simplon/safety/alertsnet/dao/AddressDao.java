@@ -10,7 +10,7 @@ public interface AddressDao {
 	
 	int initAddressTable() throws IOException;
 	
-	int insertAddress(Address address) throws IOException;
+	long insertAddress(Address address) throws IOException;
 	
 	List<Address> listAllAddress() throws IOException;
 	

@@ -15,6 +15,7 @@ import com.jsoniter.JsonIterator;
 import com.jsoniter.any.Any;
 import com.simplon.safety.alertsnet.AlertsnetApplication;
 import com.simplon.safety.alertsnet.exceptions.ResourceNotFoundException;
+import com.simplon.safety.alertsnet.model.Address;
 import com.simplon.safety.alertsnet.model.Person;
 
 
@@ -25,6 +26,9 @@ public class PersonAccessService implements PersonDao{
 	
 	@Autowired                 
     private PersonRepository personRepository;
+	
+	@Autowired 
+	AddressDao addressDao;
 	
 	public void dataInitilisation() throws IOException
 	{
@@ -38,17 +42,14 @@ public class PersonAccessService implements PersonDao{
 						                    .firstName(ligne.get("firstName").toString())
 						                    .lastName(ligne.get("lastName").toString())
 						                    .address(ligne.get("address").toString())
-//						                    new Address.AddressBuilder()
-//						                    		            .rue_name_number(ligne.get("address").toString()) 
-//											                    .city(ligne.get("city").toString()) 
-//											                    .zip(ligne.get("zip").toString()) 
-//											                    .build())
 						                    .city(ligne.get("city").toString()) 
 						                    .zip(ligne.get("zip").toString()) 
 						                    .phone(ligne.get("phone").toString()) 
 						                    .email(ligne.get("email").toString()) 
 						                    .build()
-						                    );					
+						                    );
+			
+
 		}
 	}
 	
@@ -62,9 +63,23 @@ public class PersonAccessService implements PersonDao{
 	public int initPersonTable() throws IOException 
 	{
 		this.dataInitilisation();
+		addressDao.initAddressTable();
 		
-		personRepository.saveAll(listDePersons);
-			
+		for (Person person: this.listDePersons ) {
+			long addressId = addressDao.insertAddress(new Address.AddressBuilder()
+														.rue_name_number(person.getAddress()) 
+														.city(person.getCity()) 
+														.zip(person.getZip()) 
+														.build()
+														);
+			Optional<Address> result = addressDao.getAddressById(addressId);
+			Address a =  result.get();
+			person.setPerson_address(a);
+			personRepository.save(person);
+
+		}
+//		personRepository.saveAll(this.listDePersons);
+//			
 		return 1;
 	}
 	

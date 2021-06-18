@@ -2,11 +2,14 @@ package com.simplon.safety.alertsnet.model;
 
 
 
+import java.util.Optional;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -19,6 +22,9 @@ public class Person {
 	public String firstName;
 	public String lastName;
 	
+	@ManyToOne
+	@JoinColumn( name =  "address_id")
+	public Address person_address;
 	
 	public String address;
 	public String city;
@@ -124,6 +130,15 @@ public class Person {
 	public void setZip(String zip) 
 	{
 		this.zip = zip;
+	}
+	
+	
+	public Address getPerson_address() {
+		return person_address;
+	}
+
+	public void setPerson_address(Address person_address) {
+		this.person_address = person_address;
 	}
 
 	@Override
