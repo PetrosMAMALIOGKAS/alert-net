@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import com.simplon.safety.alertsnet.model.Address;
 import com.simplon.safety.alertsnet.model.Person;
 
 
@@ -11,7 +12,7 @@ public interface PersonDao {
 	
 	int initPersonTable() throws IOException; 
 	
-    int insertPerson(Person person) throws IOException;
+    int insertPerson(Person person, Address address) throws IOException;
 	
 	List<Person> selectAllPeople() throws IOException;
 	

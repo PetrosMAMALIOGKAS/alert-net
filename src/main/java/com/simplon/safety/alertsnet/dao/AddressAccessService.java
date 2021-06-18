@@ -32,8 +32,7 @@ public class AddressAccessService implements AddressDao{
 		for (Address address : this.listDesAddress) {
 			
 			try {
-				Address dbResult = addressRepository.getAddressId_IfExists(address.getCity(), address.getRue_name_number(), address.getZip());
-				long idAddress = dbResult.getId_address();
+				addressRepository.getAddressId_IfExists(address.getCity(), address.getRue_name_number(), address.getZip());
 			} catch (Exception e) {
 		
 				this.insertAddress(address);

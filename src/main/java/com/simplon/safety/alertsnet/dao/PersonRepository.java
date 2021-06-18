@@ -11,21 +11,21 @@ import com.simplon.safety.alertsnet.model.Person;
 
 public interface PersonRepository extends JpaRepository<Person, Long> {
 	
-  @Transactional
-  @Modifying
-  @Query("update Person p set p.address = :address where p.id = :id")
-  void updatePersonAddress(@Param("address") String address, @Param("id") Long id);
+//  @Transactional
+//  @Modifying
+//  @Query("update Person p set p.address = :address where p.id = :id")
+//  void updatePersonAddress(@Param("address") String address, @Param("id") Long id);
   
-  @Transactional
-  @Modifying
-  @Query("update Person p set p.zip = :zip where p.id = :id")
-  void updatePersonZip(@Param("zip") String zip, @Param("id") Long id);
+//  @Transactional
+//  @Modifying
+//  @Query("update Person p set p.zip = :zip where p.id = :id")
+//  void updatePersonZip(@Param("zip") String zip, @Param("id") Long id);
   
-  @Transactional
-  @Modifying
-  @Query("update Person p set p.city = :city where p.id = :id")
-  void updatePersonCity(@Param("city") String city, @Param("id") Long id);
-  
+//  @Transactional
+//  @Modifying
+//  @Query("update Person p set p.city = :city where p.id = :id")
+//  void updatePersonCity(@Param("city") String city, @Param("id") Long id);
+//  
   @Transactional
   @Modifying
   @Query("update Person p set p.phone = :phone where p.id = :id")

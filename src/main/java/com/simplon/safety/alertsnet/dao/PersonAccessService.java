@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Repository;
@@ -30,26 +33,33 @@ public class PersonAccessService implements PersonDao{
 	@Autowired 
 	AddressDao addressDao;
 	
+	@PersistenceContext
+	EntityManager entityManager;
+	
 	public void dataInitilisation() throws IOException
 	{
 		String input = readJsonFile();
 		Any obj = JsonIterator.deserialize(input);
 		Any listPerson = obj.get("persons");
-
+		
 		for (Any ligne : listPerson) {
+			
+			long addressId = addressDao.insertAddress(new Address.AddressBuilder()
+								               .rue_name_number(ligne.get("address").toString()) 
+						                       .city(ligne.get("city").toString()) 
+						 		               .zip(ligne.get("zip").toString()) 
+								               .build());
+			
+			Address addressObject_ofPersonToInsert = entityManager.getReference(Address.class, addressId);
 			
 			this.listDePersons.add(new Person.PersonBuilder()
 						                    .firstName(ligne.get("firstName").toString())
 						                    .lastName(ligne.get("lastName").toString())
-						                    .address(ligne.get("address").toString())
-						                    .city(ligne.get("city").toString()) 
-						                    .zip(ligne.get("zip").toString()) 
+						                    .person_address(addressObject_ofPersonToInsert)
 						                    .phone(ligne.get("phone").toString()) 
 						                    .email(ligne.get("email").toString()) 
 						                    .build()
 						                    );
-			
-
 		}
 	}
 	
@@ -62,24 +72,16 @@ public class PersonAccessService implements PersonDao{
 	@Override
 	public int initPersonTable() throws IOException 
 	{
-		this.dataInitilisation();
+		
 		addressDao.initAddressTable();
 		
+		this.dataInitilisation();
+		
 		for (Person person: this.listDePersons ) {
-			long addressId = addressDao.insertAddress(new Address.AddressBuilder()
-														.rue_name_number(person.getAddress()) 
-														.city(person.getCity()) 
-														.zip(person.getZip()) 
-														.build()
-														);
-			Optional<Address> result = addressDao.getAddressById(addressId);
-			Address a =  result.get();
-			person.setPerson_address(a);
+			
 			personRepository.save(person);
-
 		}
-//		personRepository.saveAll(this.listDePersons);
-//			
+		
 		return 1;
 	}
 	
@@ -90,21 +92,25 @@ public class PersonAccessService implements PersonDao{
 	}
 
 	@Override
-	public int insertPerson(Person person) throws IOException 
+	public int insertPerson(Person person, Address address) throws IOException
 	{
-		  Person p = new Person();
-		  p.setFirstName(person.getFirstName());
-		  p.setLastName(person.getLastName());
-		  p.setAddress(person.getAddress());
-		  p.setPhone(person.getPhone());
-		  p.setEmail(person.getEmail());
+		long addressId = addressDao.insertAddress(address);
+		Address address_of_person_to_insert = entityManager.getReference(Address.class, addressId);
+		
+		Person p = new Person();
+		
+		p.setFirstName(person.getFirstName());
+		p.setLastName(person.getLastName());
+	    p.setPerson_address(address_of_person_to_insert);
+		p.setPhone(person.getPhone());
+		p.setEmail(person.getEmail());
 		  
-		  Person insertResult = personRepository.save(p);
-		  if  (insertResult.equals(p)) {
-			  return 1;
-		  }
+		Person insertResult = personRepository.save(p);
+		if  (insertResult.equals(p)) {
+	      return 1;
+		}
 		  
-		  return -1;
+		return -1;
 	}
 	
 	@Override
@@ -123,15 +129,15 @@ public class PersonAccessService implements PersonDao{
 			
 			Person personUpdate = personDb.get();
 		
-			if ( ! personUpdate.getAddress().equals(newPerson.getAddress())) {
-				
-				personRepository.updatePersonAddress(newPerson.getAddress(), id);
-			}
-			
-			if ( ! personUpdate.getZip().equals(newPerson.getZip())) {
-				
-				personRepository.updatePersonZip(newPerson.getZip(), id);
-			}
+//			if ( ! personUpdate.getAddress().equals(newPerson.getAddress())) {
+//				
+//				personRepository.updatePersonAddress(newPerson.getAddress(), id);
+//			}
+//			
+//			if ( ! personUpdate.getZip().equals(newPerson.getZip())) {
+//				
+//				personRepository.updatePersonZip(newPerson.getZip(), id);
+//			}
 			
 			if ( ! personUpdate.getPhone().equals(newPerson.getPhone())) {
 				
@@ -143,10 +149,10 @@ public class PersonAccessService implements PersonDao{
 				personRepository.updatePersonEmail(newPerson.getEmail(), id);
 			}
 			
-			if ( ! personUpdate.getCity().equals(newPerson.getCity())) {
-				
-				personRepository.updatePersonCity(newPerson.getCity(), id);
-			}
+//			if ( ! personUpdate.getCity().equals(newPerson.getCity())) {
+//				
+//				personRepository.updatePersonCity(newPerson.getCity(), id);
+//			}
 			
 			return 1;
 		} else {

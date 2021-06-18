@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.simplon.safety.alertsnet.dao.PersonDao;
+import com.simplon.safety.alertsnet.model.Address;
 import com.simplon.safety.alertsnet.model.Person;
 
 
@@ -38,9 +39,9 @@ public class PersonService {
 		return personDao.getPersonById(id);
 	}
 	
-	public int addPerson(Person person) throws IOException 
+	public int addPerson(Person person, Address address) throws IOException 
 	{
-		return personDao.insertPerson(person);
+		return personDao.insertPerson(person, address);
 	}
 	
 	public int deletePerson(Person person) throws IOException

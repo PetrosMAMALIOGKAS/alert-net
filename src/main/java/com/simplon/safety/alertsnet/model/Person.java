@@ -1,9 +1,6 @@
 package com.simplon.safety.alertsnet.model;
 
 
-
-import java.util.Optional;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,10 +22,6 @@ public class Person {
 	@ManyToOne
 	@JoinColumn( name =  "address_id")
 	public Address person_address;
-	
-	public String address;
-	public String city;
-	public String zip;
 
 	public String phone;
 	public String email;
@@ -42,11 +35,9 @@ public class Person {
 		this.id = builder.id;
 		this.firstName = builder.firstName;
 		this.lastName = builder.lastName;
-		this.address = builder.address;
+		this.person_address = builder.person_address;
 		this.phone = builder.phone;
 		this.email = builder.email;
-		this.city = builder.city;
-		this.zip = builder.zip;
 	}
 
 	
@@ -80,16 +71,6 @@ public class Person {
 		this.lastName = lastName;
 	}
 
-	public String getAddress() 
-	{
-		return address;
-	}
-
-	public void setAddress(String address) 
-	{
-		this.address = address;
-	}
-
 	public String getPhone() 
 	{
 		return phone;
@@ -111,28 +92,6 @@ public class Person {
 	}
 	
 	
-
-	public String getCity()
-	{
-		return city;
-	}
-
-	public void setCity(String city) 
-	{
-		this.city = city;
-	}
-
-	public String getZip()
-	{
-		return zip;
-	}
-
-	public void setZip(String zip) 
-	{
-		this.zip = zip;
-	}
-	
-	
 	public Address getPerson_address() {
 		return person_address;
 	}
@@ -144,7 +103,7 @@ public class Person {
 	@Override
 	public String toString() 
 	{
-		return "Person [firstName=" + firstName + ", lastName=" + lastName + ", address=" + address 
+		return "Person [firstName=" + firstName + ", lastName=" + lastName + ", address=" 
 				+ ", phone=" + phone + ", email=" + email + "]";
 	}
 
@@ -153,12 +112,10 @@ public class Person {
 		private Long id;
 		private String firstName;
 		private String lastName;
-		private String address;
 		private String phone;
 		private String email;
-		private String city;
-		private String zip;
-		
+		private Address person_address;
+
 		public PersonBuilder() {}
 		
 		public PersonBuilder id(@JsonProperty("id") Long id) 
@@ -179,12 +136,6 @@ public class Person {
 			return this;
 		}
 
-		public PersonBuilder address(@JsonProperty("address") String address) 
-		{
-			this.address = address;
-			return this;
-		}
-
 		public PersonBuilder phone(@JsonProperty("phone") String phone) 
 		{
 			this.phone = phone;
@@ -197,15 +148,10 @@ public class Person {
 			return this;
 		}
 		
-		public PersonBuilder city(@JsonProperty("city") String city) 
-		{
-			this.city = city;
-			return this;
-		}
 		
-		public PersonBuilder zip(@JsonProperty("zip") String zip) 
+		public PersonBuilder person_address( Address person_address) 
 		{
-			this.zip = zip;
+			this.person_address = person_address;
 			return this;
 		}
 

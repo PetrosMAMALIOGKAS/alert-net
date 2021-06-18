@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import com.simplon.safety.alertsnet.model.Address;
 import com.simplon.safety.alertsnet.model.Person;
-import com.simplon.safety.alertsnet.service.AddressService;
+import com.simplon.safety.alertsnet.model.PersonInsertion;
 import com.simplon.safety.alertsnet.service.PersonService;
 
 
@@ -26,29 +26,21 @@ import com.simplon.safety.alertsnet.service.PersonService;
 public class PersonController {
 	
 	private final PersonService personService;
-	private final AddressService addressService;
-	
-	  
+
     @Autowired
-	public PersonController(PersonService personService, AddressService addressService)
+	public PersonController(PersonService personService)
     {
       this.personService = personService;
-      this.addressService = addressService;
 	}
     
 	@PostMapping(path="/init")
 	public @ResponseBody String initialisationOfPersonData () throws IOException
 	{
 	  int resultPerson;
-	  int resultAddress;
 
 	  resultPerson = personService.initPersonTable();
 	 
-	  
-	  resultAddress = addressService.initAddressTable();
-		
-
-	  if (resultPerson == 1 && resultAddress == 1) {
+	  if (resultPerson == 1 ) {  
 		  return "table Person et address Initialised";
 	  }
 	  
@@ -67,11 +59,31 @@ public class PersonController {
 	{
 		return personService.getPersonById(id);
 	}
-
+	
+	
+	/* the json object must be formated like :
+	 * {
+	 *	    "person": {
+	 *	        "firstName": "Petros",
+	 *	        "lastName": "Mamalios",
+	 *	        "phone": "841-874-6544",
+	 *	        "email": "test@email.com"
+	 *	    },
+	 *	
+	 *	    "address": {
+	 *	        "rue_name_number": "27 rue Lfayete",
+	 *	        "city": "Culver",
+	 *	        "zip": "97451"
+	 *	    }
+	 *	}
+	 */
 	@PostMapping(path="/add")
-	public @ResponseBody String addNewPerson(@RequestBody Person person) throws IOException 
-	{
-	  int result = personService.addPerson(person);
+	public @ResponseBody String addNewPerson(@RequestBody PersonInsertion personInsertion) throws IOException 
+	{	
+		Address address = personInsertion.getAddress();
+		Person person = personInsertion.getPerson();
+	    
+	  int result = personService.addPerson(person , address);
 	  if (result == -1) {
 		  return "Not Saved: there was an error";
 	  }
