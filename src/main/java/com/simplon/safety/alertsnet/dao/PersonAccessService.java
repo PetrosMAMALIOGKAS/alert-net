@@ -19,6 +19,7 @@ import com.jsoniter.any.Any;
 import com.simplon.safety.alertsnet.AlertsnetApplication;
 import com.simplon.safety.alertsnet.exceptions.ResourceNotFoundException;
 import com.simplon.safety.alertsnet.model.Address;
+import com.simplon.safety.alertsnet.model.Firestation;
 import com.simplon.safety.alertsnet.model.Person;
 
 
@@ -33,6 +34,9 @@ public class PersonAccessService implements PersonDao{
 	@Autowired 
 	AddressDao addressDao;
 	
+	@Autowired 
+	FirestationDao firestationDao;
+	
 	@PersistenceContext
 	EntityManager entityManager;
 	
@@ -44,10 +48,14 @@ public class PersonAccessService implements PersonDao{
 		
 		for (Any ligne : listPerson) {
 			
+			long IdFirestationResponsable = firestationDao.getIdFirestationResponsable_withAddress(ligne.get("address").toString());
+			Firestation firestationObject_ofAddressToInsert = entityManager.getReference(Firestation.class, IdFirestationResponsable);
+			
 			long addressId = addressDao.insertAddress(new Address.AddressBuilder()
 								               .rue_name_number(ligne.get("address").toString()) 
 						                       .city(ligne.get("city").toString()) 
-						 		               .zip(ligne.get("zip").toString()) 
+						 		               .zip(ligne.get("zip").toString())
+						 		               .firestation_responsable(firestationObject_ofAddressToInsert)
 								               .build());
 			
 			Address addressObject_ofPersonToInsert = entityManager.getReference(Address.class, addressId);
@@ -73,7 +81,11 @@ public class PersonAccessService implements PersonDao{
 	public int initPersonTable() throws IOException 
 	{
 		
+		firestationDao.initFirestationsTable();
+		
 		addressDao.initAddressTable();
+		
+		
 		
 		this.dataInitilisation();
 		

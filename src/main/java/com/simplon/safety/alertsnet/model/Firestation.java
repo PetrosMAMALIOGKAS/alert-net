@@ -1,63 +1,79 @@
 package com.simplon.safety.alertsnet.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@Entity
 public class Firestation {
-
-	public String address;
-	public String station;
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	public Long id_firestation;
+	
+	public String station_designation;
 
 	public Firestation() {}
 	
 	public Firestation(FirestationBuilder builder) {
 		
-		this.address = builder.address;
-		this.station = builder.station;
+		this.id_firestation = builder.id_firestation;
+		this.station_designation = builder.station_designation;
 	}
 	
-	public String getAddress() {
-		
-		return address;
-	}
-
-	public void setAddress(String address) {
-		
-		this.address = address;
-	}
 
 	public String getStation() {
 		
-		return station;
+		return station_designation;
 	}
 
-	public void setStation(String station) {
+	public void setStation(String station_designation) {
 		
-		this.station = station;
+		this.station_designation = station_designation;
 	}
 
-	@Override
-	public String toString() {
-		
-		return "Firestation [address=" + address + ", station=" + station + "]";
-	}
 	
+	public Long getId_firestation()
+	{
+		return id_firestation;
+	}
+
+	public void setId_firestation(Long id_firestation)
+	{
+		this.id_firestation = id_firestation;
+	}
+
+	public String getStation_designation() 
+	{
+		return station_designation;
+	}
+
+	public void setStation_designation(String station_designation)
+	{
+		this.station_designation = station_designation;
+	}
+
 	
 	public static class FirestationBuilder {
 		
-		private String address;
-		private String station;
+		private String station_designation;
+		private long id_firestation;
 		
 		public FirestationBuilder() {}
 
-		public FirestationBuilder address(@JsonProperty("address") String address) {
+		public FirestationBuilder id_firestation(@JsonProperty("id_firestation") long id_firestation) {
 			
-			this.address = address;
+			this.id_firestation = id_firestation;
 			return this;
 		}
-
-		public FirestationBuilder station(@JsonProperty("station") String station) {
+		
+		
+		public FirestationBuilder station_designation(@JsonProperty("station_designation") String station_designation) {
 			
-			this.station = station;
+			this.station_designation = station_designation;
 			return this;
 		}
 

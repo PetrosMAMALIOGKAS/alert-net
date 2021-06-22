@@ -1,16 +1,12 @@
 package com.simplon.safety.alertsnet.model;
 
-
-
-import java.util.ArrayList;
-import java.util.Collection;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 
 @Entity
 public class Address {
@@ -19,15 +15,14 @@ public class Address {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	public Long id_address;
 	
-	@OneToMany(
-			mappedBy = "person_address",
-			cascade = CascadeType.ALL,
-			orphanRemoval = true )
-	private Collection<Person> personsOnThisAddress = new ArrayList<>();
-	
 	public String rue_name_number;
 	public String city;
 	public String zip;
+	
+	@ManyToOne
+	@JoinColumn( name =  "firestation_id")
+	public Firestation firestation_responsable;
+
 	
 	public Address() {}
 	
@@ -36,6 +31,7 @@ public class Address {
 		this.rue_name_number = builder.rue_name_number;
 		this.city = builder.city;
 		this.zip = builder.zip;
+		this.firestation_responsable = builder.firestation_responsable;
 	}
 	
 	public Long getId_address() {
@@ -70,15 +66,14 @@ public class Address {
 		this.zip = zip;
 	}
 	
-
-
-	public Collection<Person> getPersonsOnThisAddress() {
-		return personsOnThisAddress;
+	public Firestation getFirestation_responsable() {
+		return firestation_responsable;
 	}
 
-	public void setPersonsOnThisAddress(Collection<Person> personsOnThisAddress) {
-		this.personsOnThisAddress = personsOnThisAddress;
+	public void setFirestation_responsable(Firestation firestation_responsable) {
+		this.firestation_responsable = firestation_responsable;
 	}
+	
 
 	@Override
 	public String toString() {
@@ -91,6 +86,7 @@ public class Address {
 		private String rue_name_number;
 		private String city;
 		private String zip;
+		private Firestation firestation_responsable;
 
 		public AddressBuilder id_address(Long id_address) {
 			this.id_address = id_address;
@@ -111,11 +107,15 @@ public class Address {
 			this.zip = zip;
 			return this;
 		}
+		
+		public AddressBuilder firestation_responsable(Firestation firestation_responsable) {
+			this.firestation_responsable = firestation_responsable;
+			return this;
+		}
 
 		public Address build() {
 			return new Address(this);
 		}
 	}
-
 
 }

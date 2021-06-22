@@ -22,7 +22,7 @@ public class FirestationService {
 		this.firestationDao = firestationDao;
 	}
 	
-	public int insertFirestation(Firestation firestation) throws IOException {
+	public long insertFirestation(Firestation firestation) throws IOException {
 		
 		return firestationDao.insertFirestation(firestation);
 	}

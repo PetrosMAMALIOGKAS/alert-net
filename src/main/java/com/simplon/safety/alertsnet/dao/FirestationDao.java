@@ -8,13 +8,16 @@ import com.simplon.safety.alertsnet.model.Firestation;
 
 public interface FirestationDao {
 	
-		
-    int insertFirestation(Firestation firestation) throws IOException;
+	long initFirestationsTable() throws IOException;
+	
+    long insertFirestation(Firestation firestation) throws IOException;
 	
 	List<Firestation> listAllfirestations() throws IOException;
 	
 	int deleteFirestation(Firestation firestation) throws IOException;
 	
 	int updateFirestation(Firestation oldFirestation, Firestation newFirestation) throws IOException;
+
+	long getIdFirestationResponsable_withAddress(String rueNameNumber) throws IOException;
 	
 }

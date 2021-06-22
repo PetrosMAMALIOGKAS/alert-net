@@ -52,7 +52,6 @@ public class FirestationController {
 			                 @RequestBody Firestation newFirestationCaserne   )  throws IOException {
 		
 		Firestation firestationToChange = new Firestation.FirestationBuilder()
-				                     .address(address)
 				                     .build();
 		
 		firestationService.updateFirestation(firestationToChange, newFirestationCaserne);

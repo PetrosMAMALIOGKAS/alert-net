@@ -7,12 +7,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.jsoniter.JsonIterator;
 import com.jsoniter.any.Any;
 import com.simplon.safety.alertsnet.model.Address;
+import com.simplon.safety.alertsnet.model.Firestation;
 
 @Repository("AddressAccessDao")
 public class AddressAccessService implements AddressDao{
@@ -22,22 +26,22 @@ public class AddressAccessService implements AddressDao{
 	@Autowired                 
     private AddressRepository addressRepository;
 	
+	@Autowired                 
+    private FirestationDao firestationDao;
+	
+	@PersistenceContext
+	EntityManager entityManager;
+	
 	@Override
 	public int initAddressTable() throws IOException 
 	{
 		this.dataInitilisation();
+		long IdFirestationResponsable = firestationDao.getIdFirestationResponsable_withAddress(this.listDesAddress.get(0).getRue_name_number());
+		Firestation firestationObject_ofAddressToInsert = entityManager.getReference(Firestation.class, IdFirestationResponsable);
+		this.listDesAddress.get(0).setFirestation_responsable(firestationObject_ofAddressToInsert);
 		
 		this.insertAddress(this.listDesAddress.get(0));
-		
-		for (Address address : this.listDesAddress) {
-			
-			try {
-				addressRepository.getAddressId_IfExists(address.getCity(), address.getRue_name_number(), address.getZip());
-			} catch (Exception e) {
-		
-				this.insertAddress(address);
-			}
-		}	
+
 		return 1;
 	}
 
@@ -56,8 +60,9 @@ public class AddressAccessService implements AddressDao{
 			Address dbResult = addressRepository.getAddressId_IfExists(address.getCity(), address.getRue_name_number(), address.getZip());
 			idAddress = dbResult.getId_address();
 			return idAddress;
-		}   
-
+		}  
+	   
+	   
 	}
 	
 	@Override
