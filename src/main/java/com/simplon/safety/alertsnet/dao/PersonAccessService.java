@@ -20,6 +20,7 @@ import com.simplon.safety.alertsnet.AlertsnetApplication;
 import com.simplon.safety.alertsnet.exceptions.ResourceNotFoundException;
 import com.simplon.safety.alertsnet.model.Address;
 import com.simplon.safety.alertsnet.model.Firestation;
+import com.simplon.safety.alertsnet.model.MedicalRecord;
 import com.simplon.safety.alertsnet.model.Person;
 
 
@@ -36,6 +37,9 @@ public class PersonAccessService implements PersonDao{
 	
 	@Autowired 
 	FirestationDao firestationDao;
+	
+	@Autowired 
+	MedicalRecordDao medicalRecordDao;
 	
 	@PersistenceContext
 	EntityManager entityManager;
@@ -60,10 +64,17 @@ public class PersonAccessService implements PersonDao{
 			
 			Address addressObject_ofPersonToInsert = entityManager.getReference(Address.class, addressId);
 			
+			String personFirstName = ligne.get("firstName").toString();
+			String personLastName  = ligne.get("lastName").toString();
+			
+			long idOfPerson_toInsert = medicalRecordDao.getMedicalRecordId_ByFirstLastName(personFirstName, personLastName );
+			MedicalRecord medicalRecordObject_ofPersonToInsert = entityManager.getReference(MedicalRecord.class, idOfPerson_toInsert);
+			
 			this.listDePersons.add(new Person.PersonBuilder()
-						                    .firstName(ligne.get("firstName").toString())
-						                    .lastName(ligne.get("lastName").toString())
+						                    .firstName(personFirstName)
+						                    .lastName(personLastName)
 						                    .person_address(addressObject_ofPersonToInsert)
+						                    .medicalRecord(medicalRecordObject_ofPersonToInsert)
 						                    .phone(ligne.get("phone").toString()) 
 						                    .email(ligne.get("email").toString()) 
 						                    .build()
@@ -84,6 +95,8 @@ public class PersonAccessService implements PersonDao{
 		firestationDao.initFirestationsTable();
 		
 		addressDao.initAddressTable();
+		
+		medicalRecordDao.initMediacalRecordTable();
 		
 		
 		

@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -26,6 +27,10 @@ public class Person {
 	public String phone;
 	public String email;
 	
+	@OneToOne
+	@JoinColumn( name =  "id_mediacalRecord")
+	public MedicalRecord medicalRecord;
+	
 
 	
 	public Person() {}
@@ -38,6 +43,7 @@ public class Person {
 		this.person_address = builder.person_address;
 		this.phone = builder.phone;
 		this.email = builder.email;
+		this.medicalRecord = builder.medicalRecord;
 	}
 
 	
@@ -100,6 +106,16 @@ public class Person {
 		this.person_address = person_address;
 	}
 
+	public MedicalRecord getMedicalRecord()
+	{
+		return medicalRecord;
+	}
+
+	public void setMedicalRecord(MedicalRecord medicalRecord)
+	{
+		this.medicalRecord = medicalRecord;
+	}
+
 	@Override
 	public String toString() 
 	{
@@ -115,6 +131,7 @@ public class Person {
 		private String phone;
 		private String email;
 		private Address person_address;
+		private MedicalRecord medicalRecord;
 
 		public PersonBuilder() {}
 		
@@ -154,6 +171,13 @@ public class Person {
 			this.person_address = person_address;
 			return this;
 		}
+		
+		public PersonBuilder medicalRecord( MedicalRecord medicalRecord) 
+		{
+			this.medicalRecord = medicalRecord;
+			return this;
+		}
+
 
 		public Person build() 
 		{

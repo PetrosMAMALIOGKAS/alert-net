@@ -2,15 +2,24 @@ package com.simplon.safety.alertsnet.model;
 
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@Entity
 public class MedicalRecord {
 	
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	public Long id_mediacalRecord;
 	public String firstName;
 	public String lastName;
 	public String birthdate;
-	public List<String> medications;
-	public List<String> allergies;
+//	public List<String> medications;
+//	public List<String> allergies;
 
 	public MedicalRecord() {}
 	
@@ -19,8 +28,8 @@ public class MedicalRecord {
 		this.firstName = builder.firstName;
 		this.lastName = builder.lastName;
 		this.birthdate = builder.birthdate;
-		this.medications = builder.medications;
-		this.allergies = builder.allergies;
+//		this.medications = builder.medications;
+//		this.allergies = builder.allergies;
 	}
 
 	public String getFirstName() {
@@ -48,46 +57,41 @@ public class MedicalRecord {
 		return birthdate;
 	}
 
-	public void setBirthdate(String birthdate) {
-		
-		this.birthdate = birthdate;
-	}
+//	public void setBirthdate(String birthdate) {
+//		
+//		this.birthdate = birthdate;
+//	}
+//
+//	public List<String> getMedications() {
+//		
+//		return medications;
+//	}
 
-	public List<String> getMedications() {
-		
-		return medications;
-	}
+//	public void setMedications(List<String> medications) {
+//		
+//		this.medications = medications;
+//	}
+//
+//	public List<String> getAllergies() {
+//		
+//		return allergies;
+//	}
 
-	public void setMedications(List<String> medications) {
-		
-		this.medications = medications;
-	}
-
-	public List<String> getAllergies() {
-		
-		return allergies;
-	}
-
-	public void setAllergies(List<String> allergies) {
-		
-		this.allergies = allergies;
-	}
+//	public void setAllergies(List<String> allergies) {
+//		
+//		this.allergies = allergies;
+//	}
 	
-	@Override
-	public String toString() {
-		
-		return "MedicalRecord [firstName=" + firstName + ", lastName=" + lastName + ", birthdate=" + birthdate
-				+ ", medications=" + medications + ", allergies=" + allergies + "]";
-	}
+
 
 	public static class MedicalRecordBuilder {
 		
 		private String firstName;
 		private String lastName;
 		private String birthdate;
-		private List<String> medications;
-		private List<String> allergies;
-		
+//		private List<String> medications;
+//		private List<String> allergies;
+//		
 		public MedicalRecordBuilder() {}
 
 		public MedicalRecordBuilder firstName(@JsonProperty("firstName") String firstName) {
@@ -108,17 +112,17 @@ public class MedicalRecord {
 			return this;
 		}
 
-		public MedicalRecordBuilder medications(@JsonProperty("medications") List<String> medications) {
-			
-			this.medications = medications;
-			return this;
-		}
-
-		public MedicalRecordBuilder allergies(@JsonProperty("allergies") List<String> allergies) {
-			
-			this.allergies = allergies;
-			return this;
-		}
+//		public MedicalRecordBuilder medications(@JsonProperty("medications") List<String> medications) {
+//			
+//			this.medications = medications;
+//			return this;
+//		}
+//
+//		public MedicalRecordBuilder allergies(@JsonProperty("allergies") List<String> allergies) {
+//			
+//			this.allergies = allergies;
+//			return this;
+//		}
 
 		public MedicalRecord build() {
 			
