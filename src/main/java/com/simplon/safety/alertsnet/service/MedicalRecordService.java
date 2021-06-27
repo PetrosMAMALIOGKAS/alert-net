@@ -29,7 +29,7 @@ public class MedicalRecordService {
 	
 	public int addMediacalRecord(MedicalRecord medicalRecord) throws IOException {
 		
-		return medicalRecordDao.insertMediacalRecord(medicalRecord);
+		return medicalRecordDao.insertMedicalRecord(medicalRecord);
 	}
 	
 	public int deletePerson(MedicalRecord medicalRecord) throws IOException {

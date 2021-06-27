@@ -47,8 +47,6 @@ public class MedicalRecordController {
 					                 @RequestBody MedicalRecord newMedicalRecord )  throws IOException {
 				
 		MedicalRecord oldMedicalRecord = new MedicalRecord.MedicalRecordBuilder()
-										                .firstName(firstName)
-										                .lastName(lastName)
 										                .build();
 		
 		medicalRecordService.updatePerson(oldMedicalRecord, newMedicalRecord);

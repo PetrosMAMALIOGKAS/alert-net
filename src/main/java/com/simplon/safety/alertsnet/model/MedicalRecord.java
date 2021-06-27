@@ -1,11 +1,17 @@
 package com.simplon.safety.alertsnet.model;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumn;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -15,9 +21,15 @@ public class MedicalRecord {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	public Long id_mediacalRecord;
-	public String firstName;
-	public String lastName;
 	public String birthdate;
+	
+	@ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+        name = "s_associer", 
+        joinColumns = { @JoinColumn(name = "id_mediacalRecord") }, 
+        inverseJoinColumns = { @JoinColumn(name = "id_medication") }
+    )
+    Set<Medication> medications = new HashSet<>();
 //	public List<String> medications;
 //	public List<String> allergies;
 
@@ -25,52 +37,42 @@ public class MedicalRecord {
 	
 	public MedicalRecord(MedicalRecordBuilder builder) {
 		
-		this.firstName = builder.firstName;
-		this.lastName = builder.lastName;
 		this.birthdate = builder.birthdate;
-//		this.medications = builder.medications;
+		this.medications = builder.medications;
 //		this.allergies = builder.allergies;
 	}
 
-	public String getFirstName() {
-		
-		return firstName;
-	}
 
-	public void setFirstName(String firstName) {
-		
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		
-		this.lastName = lastName;
-	}
-
-	public String getBirthdate() {
-		
+	public String getBirthdate()
+	{
 		return birthdate;
 	}
 
-//	public void setBirthdate(String birthdate) {
-//		
-//		this.birthdate = birthdate;
-//	}
-//
-//	public List<String> getMedications() {
-//		
-//		return medications;
-//	}
+	public void setBirthdate(String birthdate)
+	{
+		this.birthdate = birthdate;
+	}
+	
+	public Long getId_mediacalRecord() 
+	{
+		return id_mediacalRecord;
+	}
 
-//	public void setMedications(List<String> medications) {
-//		
-//		this.medications = medications;
-//	}
+	public void setId_mediacalRecord(Long id_mediacalRecord)
+	{
+		this.id_mediacalRecord = id_mediacalRecord;
+	}
+
+	public Set<Medication> getMedications()
+	{
+		return medications;
+	}
+
+	public void setMedications(Set<Medication> medications) 
+	{
+		this.medications = medications;
+	}
+
 //
 //	public List<String> getAllergies() {
 //		
@@ -84,40 +86,29 @@ public class MedicalRecord {
 	
 
 
+
+
 	public static class MedicalRecordBuilder {
 		
-		private String firstName;
-		private String lastName;
 		private String birthdate;
-//		private List<String> medications;
+		private Set<Medication> medications;
 //		private List<String> allergies;
 //		
 		public MedicalRecordBuilder() {}
 
-		public MedicalRecordBuilder firstName(@JsonProperty("firstName") String firstName) {
-			
-			this.firstName = firstName;
-			return this;
-		}
 
-		public MedicalRecordBuilder lastName(@JsonProperty("lastName") String lastName) {
-			
-			this.lastName = lastName;
-			return this;
-		}
-
-		public MedicalRecordBuilder birthdate(@JsonProperty("birthdate") String birthdate) {
-			
+		public MedicalRecordBuilder birthdate(@JsonProperty("birthdate") String birthdate)
+		{
 			this.birthdate = birthdate;
 			return this;
 		}
 
-//		public MedicalRecordBuilder medications(@JsonProperty("medications") List<String> medications) {
-//			
-//			this.medications = medications;
-//			return this;
-//		}
-//
+		public MedicalRecordBuilder medications(Set<Medication> medications)
+		{
+			this.medications = medications;
+			return this;
+		}
+
 //		public MedicalRecordBuilder allergies(@JsonProperty("allergies") List<String> allergies) {
 //			
 //			this.allergies = allergies;

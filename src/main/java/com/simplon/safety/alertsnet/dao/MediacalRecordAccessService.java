@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -12,8 +14,9 @@ import org.springframework.stereotype.Repository;
 import com.jsoniter.JsonIterator;
 import com.jsoniter.any.Any;
 import com.simplon.safety.alertsnet.AlertsnetApplication;
-import com.simplon.safety.alertsnet.model.Firestation;
 import com.simplon.safety.alertsnet.model.MedicalRecord;
+import com.simplon.safety.alertsnet.model.Medication;
+import com.simplon.safety.alertsnet.model.Person;
 
 
 @Repository("MediacalRecordAccessDao")
@@ -52,8 +55,6 @@ public class MediacalRecordAccessService implements MedicalRecordDao{
 
 			this.listMedicalRecords.add(
 					new MedicalRecord.MedicalRecordBuilder()
-				                     .firstName(ligne.get("firstName").toString())
-				                     .lastName(ligne.get("lastName").toString())
 				                     .birthdate(ligne.get("birthdate").toString())
 //				                     .medications(listMedications) 
 //				                     .allergies(listAllergies) 
@@ -69,7 +70,7 @@ public class MediacalRecordAccessService implements MedicalRecordDao{
 		
 		for (MedicalRecord medicalRecord : this.listMedicalRecords) {
 			
-			this.insertMediacalRecord(medicalRecord);
+			this.insertMedicalRecord(medicalRecord);
 		}	
 		return 1;
 	}
@@ -91,7 +92,7 @@ public class MediacalRecordAccessService implements MedicalRecordDao{
 	
 	
 	@Override
-	public int insertMediacalRecord(MedicalRecord medicalRecord) throws IOException {
+	public int insertMedicalRecord(MedicalRecord medicalRecord) throws IOException {
 		
 //		if (AlertsnetApplication.medicalRecordsData.isEmpty()) {
 //			
@@ -110,6 +111,49 @@ public class MediacalRecordAccessService implements MedicalRecordDao{
 		
 		return 1;
 	}
+	
+
+	@SuppressWarnings("unlikely-arg-type")
+	@Override
+	public MedicalRecord insertMedicalRecord(Person person) throws IOException {
+		String input = readJsonFile();
+		Any obj = JsonIterator.deserialize(input);
+		Any data = obj.get("medicalrecords");
+		
+		System.out.println(person.getFirstName() + "   object");
+		System.out.println(person.getLastName() + "   object");
+		
+		for (Any ligne : data) {
+			System.out.println(ligne.get("firstName") + "   any");
+			System.out.println(ligne.get("lastName") + "   any");
+			
+			String firstNameActual = ligne.get("firstName").toString();
+			String lastNameActual = ligne.get("lastName").toString();
+			
+			if  (firstNameActual.equals(person.getFirstName()) && lastNameActual.equals(person.getLastName()) ) {
+				Any listMedicationsIntheJSONfile  = ligne.get("medications");
+				
+				Set<Medication> listMedicationToInsertToDb = new HashSet<>();
+				if (listMedicationsIntheJSONfile.size() > 0) {
+					for (Any med : listMedicationsIntheJSONfile) {
+						listMedicationToInsertToDb.add(new Medication.MedicationBuilder()
+								                                     .designation(med.toString())
+								                                     .build());
+					}
+				}
+				
+				MedicalRecord mediacalRecordToInsert = new MedicalRecord.MedicalRecordBuilder()
+						                                                .birthdate(ligne.get("birthdate").toString())
+						                                                .medications(listMedicationToInsertToDb)
+						                                                .build();
+						                                                
+			    MedicalRecord medicalRecordSaved =  medicalRecordRepository.save(mediacalRecordToInsert);
+			    System.out.println(medicalRecordSaved.toString() + "   Saved");
+			    return medicalRecordSaved;
+			}
+		}
+		return null;
+	}
 
 	
 
@@ -123,9 +167,9 @@ public class MediacalRecordAccessService implements MedicalRecordDao{
 			
 		}
 		
-		AlertsnetApplication.medicalRecordsData.removeIf(medicalInList -> (   
-				medicalRecord.getFirstName().equals(medicalInList.getFirstName()) 
-				&& medicalRecord.getLastName().equals(medicalInList.getLastName())));
+//		AlertsnetApplication.medicalRecordsData.removeIf(medicalInList -> (   
+//				medicalRecord.getFirstName().equals(medicalInList.getFirstName()) 
+//				&& medicalRecord.getLastName().equals(medicalInList.getLastName())));
 	
 		return 1;
 	}
@@ -142,9 +186,9 @@ public class MediacalRecordAccessService implements MedicalRecordDao{
 			
 			this.listMedicalRecords = AlertsnetApplication.medicalRecordsData;
 			
-			int indice = findIndiceDeMedicalRecord(oldMedicalRecord);
-			
-			AlertsnetApplication.medicalRecordsData.set(indice, newMedicalRecord);
+//			int indice = findIndiceDeMedicalRecord(oldMedicalRecord);
+//			
+//			AlertsnetApplication.medicalRecordsData.set(indice, newMedicalRecord);
 			
 			return 1;	
 		
@@ -173,21 +217,6 @@ public class MediacalRecordAccessService implements MedicalRecordDao{
 		return medicalRecordRepository.getId_byDate(birthdate);
 	}
 	
-	public int findIndiceDeMedicalRecord(MedicalRecord oldMedicalRecord) {
-		int counter = 0;
-		
-		for (MedicalRecord medicalRecord : listMedicalRecords ) {
-			if (medicalRecord.getFirstName().equals(oldMedicalRecord.getFirstName()) &&
-				medicalRecord.getLastName().equals(oldMedicalRecord.getLastName()) ) {
-				
-				return counter;
-			}
-
-			counter++;			
-		}
-		
-		return -1;
-	}
 	
 	public String readJsonFile() throws IOException { 
 		String data = "";
@@ -201,7 +230,6 @@ public class MediacalRecordAccessService implements MedicalRecordDao{
 	   
 	    return data;
 	}
-
 
 
 }

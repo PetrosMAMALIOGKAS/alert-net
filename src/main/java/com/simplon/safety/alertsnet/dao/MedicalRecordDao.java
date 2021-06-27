@@ -4,12 +4,15 @@ import java.io.IOException;
 import java.util.List;
 
 import com.simplon.safety.alertsnet.model.MedicalRecord;
+import com.simplon.safety.alertsnet.model.Person;
 
 
 public interface MedicalRecordDao {
 	
 		
-	    int insertMediacalRecord(MedicalRecord medicalRecord) throws IOException;
+	    int insertMedicalRecord(MedicalRecord medicalRecord) throws IOException;
+	    
+	    MedicalRecord insertMedicalRecord(Person person) throws IOException;
 		
 		List<MedicalRecord> listAllMedicalRecords() throws IOException;
 		
@@ -20,5 +23,5 @@ public interface MedicalRecordDao {
 		long initMediacalRecordTable() throws IOException;
 
 		long getMedicalRecordId_ByFirstLastName(String personFirstName, String personLastName) throws IOException;
-		
+
 }

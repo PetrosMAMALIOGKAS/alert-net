@@ -116,15 +116,24 @@ public class Person {
 		this.medicalRecord = medicalRecord;
 	}
 
+//	@Override
+//	public String toString() 
+//	{
+//		return "Person [firstName=" + firstName + ", lastName=" + lastName + ", address=" 
+//				+ ", phone=" + phone + ", email=" + email + "]";
+//	}
+	
 	@Override
-	public String toString() 
-	{
-		return "Person [firstName=" + firstName + ", lastName=" + lastName + ", address=" 
-				+ ", phone=" + phone + ", email=" + email + "]";
+	public String toString() {
+		return "PersonBuilder [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", phone="
+				+ phone + ", email=" + email + ", person_address=" + person_address + ", medicalRecord="
+				+ medicalRecord + "]";
 	}
 
-	public static class PersonBuilder 
-	{
+	
+
+	public static class PersonBuilder {
+
 		private Long id;
 		private String firstName;
 		private String lastName;

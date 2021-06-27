@@ -52,14 +52,14 @@ public class PersonAccessService implements PersonDao{
 		
 		for (Any ligne : listPerson) {
 			
-			long IdFirestationResponsable = firestationDao.getIdFirestationResponsable_withAddress(ligne.get("address").toString());
-			Firestation firestationObject_ofAddressToInsert = entityManager.getReference(Firestation.class, IdFirestationResponsable);
+		//	long IdFirestationResponsable = firestationDao.getIdFirestationResponsable_withAddress(ligne.get("address").toString());
+		//	Firestation firestationObject_ofAddressToInsert = entityManager.getReference(Firestation.class, IdFirestationResponsable);
 			
 			long addressId = addressDao.insertAddress(new Address.AddressBuilder()
 								               .rue_name_number(ligne.get("address").toString()) 
 						                       .city(ligne.get("city").toString()) 
 						 		               .zip(ligne.get("zip").toString())
-						 		               .firestation_responsable(firestationObject_ofAddressToInsert)
+						 		             //  .firestation_responsable(firestationObject_ofAddressToInsert)
 								               .build());
 			
 			Address addressObject_ofPersonToInsert = entityManager.getReference(Address.class, addressId);
@@ -67,14 +67,14 @@ public class PersonAccessService implements PersonDao{
 			String personFirstName = ligne.get("firstName").toString();
 			String personLastName  = ligne.get("lastName").toString();
 			
-			long idOfPerson_toInsert = medicalRecordDao.getMedicalRecordId_ByFirstLastName(personFirstName, personLastName );
-			MedicalRecord medicalRecordObject_ofPersonToInsert = entityManager.getReference(MedicalRecord.class, idOfPerson_toInsert);
+		//	long idOfPerson_toInsert = medicalRecordDao.getMedicalRecordId_ByFirstLastName(personFirstName, personLastName );
+		//	MedicalRecord medicalRecordObject_ofPersonToInsert = entityManager.getReference(MedicalRecord.class, idOfPerson_toInsert);
 			
 			this.listDePersons.add(new Person.PersonBuilder()
 						                    .firstName(personFirstName)
 						                    .lastName(personLastName)
 						                    .person_address(addressObject_ofPersonToInsert)
-						                    .medicalRecord(medicalRecordObject_ofPersonToInsert)
+						              //      .medicalRecord(medicalRecordObject_ofPersonToInsert)
 						                    .phone(ligne.get("phone").toString()) 
 						                    .email(ligne.get("email").toString()) 
 						                    .build()
@@ -96,7 +96,7 @@ public class PersonAccessService implements PersonDao{
 		
 		addressDao.initAddressTable();
 		
-		medicalRecordDao.initMediacalRecordTable();
+		//medicalRecordDao.initMediacalRecordTable();
 		
 		
 		
@@ -104,7 +104,8 @@ public class PersonAccessService implements PersonDao{
 		
 		for (Person person: this.listDePersons ) {
 			
-			personRepository.save(person);
+			//personRepository.save(person);
+			this.insertPerson(person);
 		}
 		
 		return 1;
@@ -122,16 +123,26 @@ public class PersonAccessService implements PersonDao{
 		long addressId = addressDao.insertAddress(address);
 		Address address_of_person_to_insert = entityManager.getReference(Address.class, addressId);
 		
-		Person p = new Person();
-		
-		p.setFirstName(person.getFirstName());
-		p.setLastName(person.getLastName());
-	    p.setPerson_address(address_of_person_to_insert);
-		p.setPhone(person.getPhone());
-		p.setEmail(person.getEmail());
+	    person.setPerson_address(address_of_person_to_insert);
+
+		Person insertResult = personRepository.save(person);
+		if  (insertResult.equals(person)) {
+	      return 1;
+		}
 		  
-		Person insertResult = personRepository.save(p);
-		if  (insertResult.equals(p)) {
+		return -1;
+	}
+	
+	@Override
+	public int insertPerson(Person person) throws IOException
+	{
+		
+		MedicalRecord personMediacalRecord = medicalRecordDao.insertMedicalRecord(person);
+		
+		System.out.println(personMediacalRecord.toString());
+		
+		Person insertResult = personRepository.save(person);
+		if  (insertResult.equals(person)) {
 	      return 1;
 		}
 		  

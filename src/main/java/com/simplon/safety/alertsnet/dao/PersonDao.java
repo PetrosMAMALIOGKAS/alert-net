@@ -13,6 +13,8 @@ public interface PersonDao {
 	int initPersonTable() throws IOException; 
 	
     int insertPerson(Person person, Address address) throws IOException;
+    
+    int insertPerson(Person person) throws IOException;
 	
 	List<Person> selectAllPeople() throws IOException;
 	
@@ -23,6 +25,8 @@ public interface PersonDao {
 	int deletePersonById(Long id);
 	
 	int updatePersonById(Long id, Person newPerson);
+
+	
 	
 }
 
