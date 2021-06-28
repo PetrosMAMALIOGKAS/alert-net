@@ -46,23 +46,16 @@ public class AddressAccessService implements AddressDao{
 	}
 
 	@Override
-	public long insertAddress(Address address) throws IOException 
-	{
-	  
-	   long idAddress;		
-	   try {
+	public Address insertAddress(Address address) throws IOException 
+	{	
 			Address dbResult = addressRepository.getAddressId_IfExists(address.getCity(), address.getRue_name_number(), address.getZip());
-			idAddress = dbResult.getId_address();
-			return idAddress;
-		} catch (Exception e) {
-	
-			addressRepository.save(address);
-			Address dbResult = addressRepository.getAddressId_IfExists(address.getCity(), address.getRue_name_number(), address.getZip());
-			idAddress = dbResult.getId_address();
-			return idAddress;
-		}  
-	   
-	   
+			
+			if (dbResult == null ) {
+				
+				dbResult = addressRepository.save(address);
+			}
+
+			return dbResult;
 	}
 	
 	@Override

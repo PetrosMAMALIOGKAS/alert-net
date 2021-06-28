@@ -1,7 +1,6 @@
 package com.simplon.safety.alertsnet.model;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -30,8 +29,16 @@ public class MedicalRecord {
         inverseJoinColumns = { @JoinColumn(name = "id_medication") }
     )
     Set<Medication> medications = new HashSet<>();
-//	public List<String> medications;
-//	public List<String> allergies;
+
+	
+	@ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+        name = "contenir", 
+        joinColumns = { @JoinColumn(name = "id_mediacalRecord") }, 
+        inverseJoinColumns = { @JoinColumn(name = "id_allergie") }
+    )
+    Set<Allergie> allergies = new HashSet<>();
+
 
 	public MedicalRecord() {}
 	
@@ -39,7 +46,7 @@ public class MedicalRecord {
 		
 		this.birthdate = builder.birthdate;
 		this.medications = builder.medications;
-//		this.allergies = builder.allergies;
+		this.allergies = builder.allergies;
 	}
 
 
@@ -73,16 +80,16 @@ public class MedicalRecord {
 		this.medications = medications;
 	}
 
-//
-//	public List<String> getAllergies() {
-//		
-//		return allergies;
-//	}
 
-//	public void setAllergies(List<String> allergies) {
-//		
-//		this.allergies = allergies;
-//	}
+	public Set<Allergie> getAllergies() {
+		
+		return allergies;
+	}
+
+	public void setAllergies(Set<Allergie> allergies) {
+		
+		this.allergies = allergies;
+	}
 	
 
 
@@ -92,8 +99,8 @@ public class MedicalRecord {
 		
 		private String birthdate;
 		private Set<Medication> medications;
-//		private List<String> allergies;
-//		
+		private Set<Allergie> allergies;
+		
 		public MedicalRecordBuilder() {}
 
 
@@ -109,11 +116,11 @@ public class MedicalRecord {
 			return this;
 		}
 
-//		public MedicalRecordBuilder allergies(@JsonProperty("allergies") List<String> allergies) {
-//			
-//			this.allergies = allergies;
-//			return this;
-//		}
+		public MedicalRecordBuilder allergies(@JsonProperty("allergies") Set<Allergie> allergies) {
+			
+			this.allergies = allergies;
+			return this;
+		}
 
 		public MedicalRecord build() {
 			

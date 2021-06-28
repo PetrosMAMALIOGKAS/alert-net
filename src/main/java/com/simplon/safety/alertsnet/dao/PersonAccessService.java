@@ -51,30 +51,21 @@ public class PersonAccessService implements PersonDao{
 		Any listPerson = obj.get("persons");
 		
 		for (Any ligne : listPerson) {
+
+//			long addressId = addressDao.insertAddress(new Address.AddressBuilder()
+//								               .rue_name_number(ligne.get("address").toString()) 
+//						                       .city(ligne.get("city").toString()) 
+//						 		               .zip(ligne.get("zip").toString())
+//								               .build());
 			
-		//	long IdFirestationResponsable = firestationDao.getIdFirestationResponsable_withAddress(ligne.get("address").toString());
-		//	Firestation firestationObject_ofAddressToInsert = entityManager.getReference(Firestation.class, IdFirestationResponsable);
-			
-			long addressId = addressDao.insertAddress(new Address.AddressBuilder()
-								               .rue_name_number(ligne.get("address").toString()) 
-						                       .city(ligne.get("city").toString()) 
-						 		               .zip(ligne.get("zip").toString())
-						 		             //  .firestation_responsable(firestationObject_ofAddressToInsert)
-								               .build());
-			
-			Address addressObject_ofPersonToInsert = entityManager.getReference(Address.class, addressId);
+		//	Address addressObject_ofPersonToInsert = entityManager.getReference(Address.class, addressId);
 			
 			String personFirstName = ligne.get("firstName").toString();
 			String personLastName  = ligne.get("lastName").toString();
 			
-		//	long idOfPerson_toInsert = medicalRecordDao.getMedicalRecordId_ByFirstLastName(personFirstName, personLastName );
-		//	MedicalRecord medicalRecordObject_ofPersonToInsert = entityManager.getReference(MedicalRecord.class, idOfPerson_toInsert);
-			
 			this.listDePersons.add(new Person.PersonBuilder()
 						                    .firstName(personFirstName)
 						                    .lastName(personLastName)
-						                    .person_address(addressObject_ofPersonToInsert)
-						              //      .medicalRecord(medicalRecordObject_ofPersonToInsert)
 						                    .phone(ligne.get("phone").toString()) 
 						                    .email(ligne.get("email").toString()) 
 						                    .build()
@@ -92,19 +83,15 @@ public class PersonAccessService implements PersonDao{
 	public int initPersonTable() throws IOException 
 	{
 		
-		firestationDao.initFirestationsTable();
+		//firestationDao.initFirestationsTable();
 		
-		addressDao.initAddressTable();
-		
-		//medicalRecordDao.initMediacalRecordTable();
-		
+		//addressDao.initAddressTable();
 		
 		
 		this.dataInitilisation();
 		
 		for (Person person: this.listDePersons ) {
 			
-			//personRepository.save(person);
 			this.insertPerson(person);
 		}
 		
@@ -120,10 +107,10 @@ public class PersonAccessService implements PersonDao{
 	@Override
 	public int insertPerson(Person person, Address address) throws IOException
 	{
-		long addressId = addressDao.insertAddress(address);
-		Address address_of_person_to_insert = entityManager.getReference(Address.class, addressId);
+//		long addressId = addressDao.insertAddress(address);
+//		Address address_of_person_to_insert = entityManager.getReference(Address.class, addressId);
 		
-	    person.setPerson_address(address_of_person_to_insert);
+//	    person.setPerson_address(address_of_person_to_insert);
 
 		Person insertResult = personRepository.save(person);
 		if  (insertResult.equals(person)) {
@@ -136,16 +123,21 @@ public class PersonAccessService implements PersonDao{
 	@Override
 	public int insertPerson(Person person) throws IOException
 	{
-		
 		MedicalRecord personMediacalRecord = medicalRecordDao.insertMedicalRecord(person);
 		
-		System.out.println(personMediacalRecord.toString());
+		Address addressOfPerson = addressDao.insertAddress(this.getPersonAddress(person));
+		
+		System.out.println(this.getPersonAddress(person) + "  insertion address");
+		System.out.println(addressOfPerson + "   insertion");
+		
+		person.setPerson_address(addressOfPerson);
+		person.setMedicalRecord(personMediacalRecord);
 		
 		Person insertResult = personRepository.save(person);
 		if  (insertResult.equals(person)) {
+			
 	      return 1;
 		}
-		  
 		return -1;
 	}
 	
@@ -227,6 +219,32 @@ public class PersonAccessService implements PersonDao{
 	   
 	    return persons;
 	}
+	
+	public Address getPersonAddress(Person person) throws IOException
+	{
+		String input = readJsonFile();
+		Any obj = JsonIterator.deserialize(input);
+		Any listPerson = obj.get("persons");
+		
+		Address personAddress = new Address.AddressBuilder()
+				                           .build();
+		
+		for (Any ligne : listPerson) {
+			String personFirstName = ligne.get("firstName").toString();
+			String personLastName  = ligne.get("lastName").toString();
+		
+			if (personFirstName.equals(person.getFirstName()) && personLastName.equals(person.getLastName()) ) {
+				personAddress.setCity(ligne.get("city").toString());
+				personAddress.setRue_name_number(ligne.get("address").toString());
+				personAddress.setZip(ligne.get("zip").toString());
+				
+				return personAddress;
+			}
+		}
+		
+		return null;
+	}
 
+	
 	
 }

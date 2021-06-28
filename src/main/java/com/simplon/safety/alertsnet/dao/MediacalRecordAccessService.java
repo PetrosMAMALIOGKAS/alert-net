@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import com.jsoniter.JsonIterator;
 import com.jsoniter.any.Any;
 import com.simplon.safety.alertsnet.AlertsnetApplication;
+import com.simplon.safety.alertsnet.model.Allergie;
 import com.simplon.safety.alertsnet.model.MedicalRecord;
 import com.simplon.safety.alertsnet.model.Medication;
 import com.simplon.safety.alertsnet.model.Person;
@@ -119,20 +120,15 @@ public class MediacalRecordAccessService implements MedicalRecordDao{
 		String input = readJsonFile();
 		Any obj = JsonIterator.deserialize(input);
 		Any data = obj.get("medicalrecords");
-		
-		System.out.println(person.getFirstName() + "   object");
-		System.out.println(person.getLastName() + "   object");
-		
+
 		for (Any ligne : data) {
-			System.out.println(ligne.get("firstName") + "   any");
-			System.out.println(ligne.get("lastName") + "   any");
-			
+
 			String firstNameActual = ligne.get("firstName").toString();
 			String lastNameActual = ligne.get("lastName").toString();
 			
 			if  (firstNameActual.equals(person.getFirstName()) && lastNameActual.equals(person.getLastName()) ) {
-				Any listMedicationsIntheJSONfile  = ligne.get("medications");
 				
+				Any listMedicationsIntheJSONfile  = ligne.get("medications");
 				Set<Medication> listMedicationToInsertToDb = new HashSet<>();
 				if (listMedicationsIntheJSONfile.size() > 0) {
 					for (Any med : listMedicationsIntheJSONfile) {
@@ -142,13 +138,23 @@ public class MediacalRecordAccessService implements MedicalRecordDao{
 					}
 				}
 				
+				Any listAllergiesIntheJSONfile  = ligne.get("allergies");
+				Set<Allergie> listAllergiesToInsertToDb = new HashSet<>();
+				if (listAllergiesIntheJSONfile.size() > 0) {
+					for (Any allergie : listAllergiesIntheJSONfile) {
+						listAllergiesToInsertToDb.add(new Allergie.AllergieBuilder()
+								                                     .designation(allergie.toString())
+								                                     .build());
+					}
+				}
+				
 				MedicalRecord mediacalRecordToInsert = new MedicalRecord.MedicalRecordBuilder()
 						                                                .birthdate(ligne.get("birthdate").toString())
 						                                                .medications(listMedicationToInsertToDb)
+						                                                .allergies(listAllergiesToInsertToDb)
 						                                                .build();
 						                                                
 			    MedicalRecord medicalRecordSaved =  medicalRecordRepository.save(mediacalRecordToInsert);
-			    System.out.println(medicalRecordSaved.toString() + "   Saved");
 			    return medicalRecordSaved;
 			}
 		}
