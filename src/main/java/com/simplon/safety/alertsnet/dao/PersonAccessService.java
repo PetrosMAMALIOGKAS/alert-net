@@ -11,7 +11,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Repository;
 
 import com.jsoniter.JsonIterator;
@@ -19,7 +18,6 @@ import com.jsoniter.any.Any;
 import com.simplon.safety.alertsnet.AlertsnetApplication;
 import com.simplon.safety.alertsnet.exceptions.ResourceNotFoundException;
 import com.simplon.safety.alertsnet.model.Address;
-import com.simplon.safety.alertsnet.model.Firestation;
 import com.simplon.safety.alertsnet.model.MedicalRecord;
 import com.simplon.safety.alertsnet.model.Person;
 
@@ -51,15 +49,6 @@ public class PersonAccessService implements PersonDao{
 		Any listPerson = obj.get("persons");
 		
 		for (Any ligne : listPerson) {
-
-//			long addressId = addressDao.insertAddress(new Address.AddressBuilder()
-//								               .rue_name_number(ligne.get("address").toString()) 
-//						                       .city(ligne.get("city").toString()) 
-//						 		               .zip(ligne.get("zip").toString())
-//								               .build());
-			
-		//	Address addressObject_ofPersonToInsert = entityManager.getReference(Address.class, addressId);
-			
 			String personFirstName = ligne.get("firstName").toString();
 			String personLastName  = ligne.get("lastName").toString();
 			
@@ -82,12 +71,6 @@ public class PersonAccessService implements PersonDao{
 	@Override
 	public int initPersonTable() throws IOException 
 	{
-		
-		//firestationDao.initFirestationsTable();
-		
-		//addressDao.initAddressTable();
-		
-		
 		this.dataInitilisation();
 		
 		for (Person person: this.listDePersons ) {
@@ -126,10 +109,7 @@ public class PersonAccessService implements PersonDao{
 		MedicalRecord personMediacalRecord = medicalRecordDao.insertMedicalRecord(person);
 		
 		Address addressOfPerson = addressDao.insertAddress(this.getPersonAddress(person));
-		
-		System.out.println(this.getPersonAddress(person) + "  insertion address");
-		System.out.println(addressOfPerson + "   insertion");
-		
+			
 		person.setPerson_address(addressOfPerson);
 		person.setMedicalRecord(personMediacalRecord);
 		
@@ -245,6 +225,4 @@ public class PersonAccessService implements PersonDao{
 		return null;
 	}
 
-	
-	
 }

@@ -20,8 +20,5 @@ public interface MedicalRecordDao {
 		
 		int updateMedicalRecord(MedicalRecord medicalRecord, MedicalRecord newMedicalRecord) throws IOException;
 
-		long initMediacalRecordTable() throws IOException;
-
 		long getMedicalRecordId_ByFirstLastName(String personFirstName, String personLastName) throws IOException;
-
 }

@@ -31,31 +31,21 @@ public class AddressAccessService implements AddressDao{
 	
 	@PersistenceContext
 	EntityManager entityManager;
-	
-	@Override
-	public int initAddressTable() throws IOException 
-	{
-		this.dataInitilisation();
-		long IdFirestationResponsable = firestationDao.getIdFirestationResponsable_withAddress(this.listDesAddress.get(0).getRue_name_number());
-		Firestation firestationObject_ofAddressToInsert = entityManager.getReference(Firestation.class, IdFirestationResponsable);
-		this.listDesAddress.get(0).setFirestation_responsable(firestationObject_ofAddressToInsert);
-		
-		this.insertAddress(this.listDesAddress.get(0));
-
-		return 1;
-	}
 
 	@Override
 	public Address insertAddress(Address address) throws IOException 
 	{	
-			Address dbResult = addressRepository.getAddressId_IfExists(address.getCity(), address.getRue_name_number(), address.getZip());
+		Address dbResult = addressRepository.getAddress_IfExists(address.getCity(), address.getRue_name_number(), address.getZip());
+		
+		if (dbResult == null ) {
 			
-			if (dbResult == null ) {
-				
-				dbResult = addressRepository.save(address);
-			}
+			Firestation firestationResponsable = firestationDao.insertFirestation(address);
+			address.setFirestation_responsable(firestationResponsable);
+			
+			dbResult = addressRepository.save(address);
+		}
 
-			return dbResult;
+		return dbResult;
 	}
 	
 	@Override

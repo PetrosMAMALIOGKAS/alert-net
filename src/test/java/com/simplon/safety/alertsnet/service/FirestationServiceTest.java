@@ -9,6 +9,7 @@ import com.simplon.safety.alertsnet.dao.FirestationAccessService;
 
 class FirestationServiceTest {
 	
+	@SuppressWarnings("unused")
 	private FirestationAccessService firestationAccessService;
 	
 	@BeforeEach

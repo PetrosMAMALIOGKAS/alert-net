@@ -36,45 +36,26 @@ public class MediacalRecordAccessService implements MedicalRecordDao{
 		Any data = obj.get("medicalrecords");
 		
 		for (Any ligne : data) {
-//			List<String> listMedications = new ArrayList<String>();
-//			List<String> listAllergies = new ArrayList<String>();
 			
-//			if (ligne.get("medications").size() > 0) {
-//
-//				for (Any medication : ligne.get("medications")) {
-//					
-//					listMedications.add(medication.toString());
-//				}
-//			}
-			
-//			if (ligne.get("allergies").size() > 0) {
-//				
-//				for (Any allergie : ligne.get("allergies")) {
-//					listAllergies.add(allergie.toString());
-//				}
-//			}
-
 			this.listMedicalRecords.add(
 					new MedicalRecord.MedicalRecordBuilder()
 				                     .birthdate(ligne.get("birthdate").toString())
-//				                     .medications(listMedications) 
-//				                     .allergies(listAllergies) 
 				                     .build()
 				                     );
 		} 
 	}
 	
-	@Override
-	public long initMediacalRecordTable() throws IOException 
-	{
-		this.dataInitilisation();
-		
-		for (MedicalRecord medicalRecord : this.listMedicalRecords) {
-			
-			this.insertMedicalRecord(medicalRecord);
-		}	
-		return 1;
-	}
+//	@Override
+//	public long initMediacalRecordTable() throws IOException 
+//	{
+//		this.dataInitilisation();
+//		
+//		for (MedicalRecord medicalRecord : this.listMedicalRecords) {
+//			
+//			this.insertMedicalRecord(medicalRecord);
+//		}	
+//		return 1;
+//	}
 	
 	
 	@Override
@@ -94,27 +75,14 @@ public class MediacalRecordAccessService implements MedicalRecordDao{
 	
 	@Override
 	public int insertMedicalRecord(MedicalRecord medicalRecord) throws IOException {
-		
-//		if (AlertsnetApplication.medicalRecordsData.isEmpty()) {
-//			
-//			this.dataInitilisation();
-//			this.listMedicalRecords.add(medicalRecord);
-//			AlertsnetApplication.medicalRecordsData = this.listMedicalRecords;
-//			
-//			return 1;
-//		} else {
-//			
-//			AlertsnetApplication.medicalRecordsData.add(medicalRecord);
-//			
-//			return 1;
-//		}
+
 		medicalRecordRepository.save(medicalRecord);
 		
 		return 1;
 	}
 	
 
-	@SuppressWarnings("unlikely-arg-type")
+
 	@Override
 	public MedicalRecord insertMedicalRecord(Person person) throws IOException {
 		String input = readJsonFile();
@@ -236,6 +204,5 @@ public class MediacalRecordAccessService implements MedicalRecordDao{
 	   
 	    return data;
 	}
-
 
 }

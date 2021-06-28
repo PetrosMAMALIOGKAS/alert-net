@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.jsoniter.JsonIterator;
 import com.jsoniter.any.Any;
+import com.simplon.safety.alertsnet.model.Address;
 import com.simplon.safety.alertsnet.model.Firestation;
 
 
@@ -29,35 +30,15 @@ public class FirestationAccessService implements FirestationDao {
 		Any listFirestations = obj.get("firestations");
 
 		for (Any ligne : listFirestations) {
-			boolean existInList = false;
-			for (Firestation firestation : this.firestations) {
-				if (firestation.getStation_designation().equals(ligne.get("station").toString())) {
-					existInList = true;
-				}
-			}
-			if ( ! existInList) {
-				this.firestations.add(new Firestation.FirestationBuilder()
-	                    .station_designation(ligne.get("station").toString()) 
-	                    .build()
-	                    );
-			}
-			
+
+			this.firestations.add(new Firestation.FirestationBuilder()
+							                    .station_designation(ligne.get("station").toString()) 
+							                    .build()
+							                    );
 		}
 	}
 	
 
-	@Override
-	public long initFirestationsTable() throws IOException 
-	{
-		this.dataInitilisation();
-		
-		for (Firestation firestation : this.firestations) {
-			
-			this.insertFirestation(firestation);
-		}	
-		return 1;
-	}
-	
 	@Override
 	public long getIdFirestationResponsable_withAddress(String rueNameNumber) throws IOException {
 		
@@ -75,6 +56,8 @@ public class FirestationAccessService implements FirestationDao {
 		long firestationid = firestationRepository.getFirestationId_IfExists(station_designation);
 		
 		return firestationid;
+		
+
 	}
 	
 	
@@ -90,6 +73,30 @@ public class FirestationAccessService implements FirestationDao {
 //		}
 		
 		return this.firestations;
+	}
+	
+	public Firestation insertFirestation(Address address) throws IOException 
+	{
+		String input = readJsonFile();
+		Any obj = JsonIterator.deserialize(input);
+		Any listFirestations = obj.get("firestations");
+		
+		String rueNameNumber = address.getRue_name_number();
+		
+		for (Any ligne : listFirestations) {
+			if (rueNameNumber.equals(ligne.get("address").toString())) {
+				Firestation queryResult = firestationRepository.getFirestation_IfExists(ligne.get("station").toString());
+				
+				if (queryResult == null) {
+					queryResult = new Firestation.FirestationBuilder()
+							                     .station_designation(ligne.get("station").toString())
+							                     .build();
+					queryResult = firestationRepository.save(queryResult);
+				}
+				return queryResult;
+			}
+		}
+		return null;
 	}
 	
 
@@ -144,7 +151,7 @@ public class FirestationAccessService implements FirestationDao {
 //			
 //		}
 		
-		int indice = findIndiceDeFirestation(oldFirestation);
+	
 		
 //		Firestation newData = new Firestation.FirestationBuilder()
 //				                             .address(oldFirestation.getAddress())
@@ -175,21 +182,6 @@ public class FirestationAccessService implements FirestationDao {
 		}
 	   
 	    return persons;
-	}
-	
-	public int findIndiceDeFirestation(Firestation firestationToChange) {
-		int counter = 0;
-		
-//		for (Firestation firestation : firestations ) {
-//			if (firestation.getAddress().equals(firestationToChange.getAddress()) ) {
-//				
-//				return counter;
-//			}
-//
-//			counter++;			
-//		}
-		
-		return -1;
 	}
 
 }

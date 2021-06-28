@@ -3,14 +3,15 @@ package com.simplon.safety.alertsnet.dao;
 import java.io.IOException;
 import java.util.List;
 
+import com.simplon.safety.alertsnet.model.Address;
 import com.simplon.safety.alertsnet.model.Firestation;
 
 
 public interface FirestationDao {
 	
-	long initFirestationsTable() throws IOException;
-	
     long insertFirestation(Firestation firestation) throws IOException;
+    
+    Firestation insertFirestation(Address address)  throws IOException;
 	
 	List<Firestation> listAllfirestations() throws IOException;
 	

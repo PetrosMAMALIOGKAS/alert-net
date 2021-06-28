@@ -18,6 +18,6 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
 			+ "where  a.city = :city "
 			+ "and    a.rue_name_number = :rue_name_number "
 			+ "and    a.zip = :zip", nativeQuery = true)
-	Address getAddressId_IfExists(@Param("city") String city, @Param("rue_name_number") String rue_name_number, @Param("zip") String zip);
+	Address getAddress_IfExists(@Param("city") String city, @Param("rue_name_number") String rue_name_number, @Param("zip") String zip);
 	
 }

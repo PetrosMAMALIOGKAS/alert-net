@@ -12,7 +12,13 @@ import com.simplon.safety.alertsnet.model.Firestation;
 @Transactional
 public interface FirestationRepository extends JpaRepository<Firestation, Long> {
 	
-	@Query(value="select id_firestation "
+	@Query(value="select *"
+			+ "from  firestation f "
+			+ "where  f.station_designation = :station_designation "
+			, nativeQuery = true)
+	Firestation getFirestation_IfExists(@Param("station_designation") String station_designation);
+	
+	@Query(value="select f.id_firestation"
 			+ "from  firestation f "
 			+ "where  f.station_designation = :station_designation "
 			, nativeQuery = true)

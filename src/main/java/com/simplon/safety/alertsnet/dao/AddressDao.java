@@ -8,8 +8,6 @@ import com.simplon.safety.alertsnet.model.Address;
 
 public interface AddressDao {
 	
-	int initAddressTable() throws IOException;
-	
 	Address insertAddress(Address address) throws IOException;
 	
 	List<Address> listAllAddress() throws IOException;
